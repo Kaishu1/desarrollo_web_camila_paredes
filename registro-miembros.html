@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <h1>Formulario de registro miembros</h1>
+    <form>
+        <fieldset>
+            <div>
+                <label for="nombre">  Nombre completo</label>
+                <input type="text" id="nombre" name="nombre" required> 
+            </div> 
+            <div>       
+                <label for="correo"> Correo </label>
+                <input type="email" id="correo" name="correo" required>
+                
+            </div>
+
+            <div>       
+                <label for="telefono"> Teléfono </label>
+                <input type="tel" id="telefono" name="telefono" required>
+            </div>
+
+            <div>  
+                <!-- no required pq miembro puede que no tenga telegram-->     
+                <label for="telegram"> Usuario de Telegram </label>
+                <input type="text" id="telegram" name="telegram"> 
+            </div>
+            <!-- Idea para añadir: si no tiene telegram, que tenga la opción de seleccionar otra red social y especificar su nombre de usuario-->
+
+            <div>
+                <label for="tipo"> Tipo de miembro:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="" selected disabled> Seleccione una opción</option>
+                    <option value="pregrado"> Estudiante de Pregrado </option> <option value="postgrado"> Estudiante de Postgrado</option>
+                    <option value="funcionario"> Funcionario </option>
+                    <option value="academico"> Académico </option>
+                </select>
+
+            </div>
+        </fieldset>
+    </form>
+
+</html>
+
