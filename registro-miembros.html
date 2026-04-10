@@ -38,5 +38,48 @@
         </fieldset>
     </form>
 
+    <h1>Actividades</h1>
+
+    <form>
+        <fieldset>
+            <div>
+                <label for="tipoActividad" > ¿Qué actividad realizas?</label>
+                <input type="text" id="tipoActividad">
+            </div>
+            <div>
+                <label for="categoriaActividad"> Categoría </label>
+                <select id="categoriaActividad">
+                    <option value=""selected disabled> Seleccione una opción</option>
+                    <option value="deporte">Deporte</option>
+                    <option value="artistico">Artístico</option>
+                    <option value="educativo">Educativo</option>
+                    <option value="social"> Social / Voluntariado</option>
+                    <option value="recreativo">Recreativo</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="diasActividad"> Días </label>
+                <input type="text" id="diasActividad" >
+            </div>
+
+            <div>
+                <label for="horasActividad"> Horas </label>
+                <input type="text" id="horasActividad" >
+            </div>
+
+            <div>
+                <label for="imagenActividad">Imagen</label>
+                <input type="file" id="imagenActividad" accept="image/*">
+            </div>
+            
+            <div>
+                <label for="videoActividad">Video</label>
+                <input type="file" id="videoActividad" accept="video/*">
+            </div>
+
+        </fieldset>
+    </form>
+
 </html>
 
