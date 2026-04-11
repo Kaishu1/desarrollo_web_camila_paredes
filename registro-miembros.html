@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>meow</title>
+    <title>Registro y Actividades</title>
     <style>
         body { font-family: sans-serif; max-width: 600px; margin: 40px auto; }
         .error { color: #c0392b; font-size: 0.85em; display: none; }
@@ -23,24 +23,28 @@
         <fieldset>
             <div>
                 <label for="nombre">  Nombre completo</label>
-                <input type="text" id="nombre" name="nombre"> 
+                <input type="text" id="nombre" name="nombre" placeholder="Juan López"> 
+                <span class="error" id="errorNombre" visible> Ingrese su nombre completo </span>
             </div> 
             <br>
             <div>       
                 <label for="correo"> Correo </label>
-                <input type="email" id="correo" name="correo">
+                <input type="email" id="correo" name="correo" placeholder="correo@gmail.com">
+                <span class="error" id="errorCorreo" visible> Ingrese un correo válido </span>
                 
             </div>
             <br>
             <div>       
-                <label for="telefono"> Teléfono </label>
-                <input type="tel" id="telefono" name="telefono">
+                <label for="telefono"> Teléfono +56 9 </label>
+                <input type="tel" id="telefono" name="telefono" placeholder="1234 5678">
+                <span class="error" id="errorTelefono" visible>Ingrese un número válido de 8 dígitos</span>
             </div>
             <br>
             <div>  
                 <!-- no required pq miembro puede que no tenga telegram-->     
                 <label for="telegram"> Usuario de Telegram </label>
-                <input type="text" id="telegram" name="telegram"> 
+                <input type="text" id="telegram" name="telegram" placeholder="@vegeta777"> 
+                <span class="error" id="errorTelegram" visible>Ingrese un usuario de Telegram válido</span>
             </div>
             <!-- Idea para añadir: si no tiene telegram, que tenga la opción de seleccionar otra red social y especificar su nombre de usuario-->
             <br>
@@ -53,6 +57,7 @@
                     <option value="funcionario"> Funcionario </option>
                     <option value="academico"> Académico </option>
                 </select>
+                <span class="error" id="errorTipoMiembro" visible>Debe seleccionar una opción</span>
                 
 
             </div>
@@ -83,13 +88,13 @@
                     <option value="social"> Social / Voluntariado</option>
                     <option value="recreativo">Recreativo</option>
                 </select>
-                <span class="error" id="errorTipoActividad"> Debe seleccionar un tipo. </span>
+                <span class="error" id="errorTipoActividad"> Debe seleccionar una opción </span>
             </div>
             <br>
             <div>
                 <label for="horasActividad">Horas semanales dedicadas:</label>
                 <input type="number" id="horasActividad" min="1" max="40">
-                <span class="error" id="errorHorasActividad" visible>Ingrese un número entre 1 y 40.</span>
+                <span class="error" id="errorHorasActividad" visible>Ingrese un número entre 1 y 40</span>
             </div>
             <br>
 
