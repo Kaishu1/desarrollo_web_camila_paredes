@@ -20,7 +20,7 @@ const datos = [
     {
         nombre: "Juan Pérez",
         correo: "juanp@gmail.com",
-        telefono: "98765432",
+        telefono: "9876 5432",
         tipoMiembro: "Funcionario",
         actividad: "Fútbol",
         tipoActividad: "Deporte"
@@ -28,7 +28,7 @@ const datos = [
     {
         nombre: "María López",
         correo: "maria@gmail.com",
-        telefono: "91234567",
+        telefono: "9123 4567",
         tipoMiembro: "Académico",
         actividad: "Investigación",
         tipoActividad: "Educativo"
@@ -36,7 +36,7 @@ const datos = [
     {
         nombre: "Pedro González",
         correo: "pedro@gmail.com",
-        telefono: "99887766",
+        telefono: "9988 7766",
         tipoMiembro: "Pregrado",
         actividad: "Voluntariado",
         tipoActividad: "Social / Voluntariado"
@@ -44,7 +44,7 @@ const datos = [
     {
         nombre: "Ana Torres",
         correo: "ana@gmail.com",
-        telefono: "93456789",
+        telefono: "9345 6789",
         tipoMiembro: "Postgrado",
         actividad: "Pintura",
         tipoActividad: "Artístico"
@@ -52,7 +52,7 @@ const datos = [
     {
         nombre: "Diego Rojas",
         correo: "diego@gmail.com",
-        telefono: "94561234",
+        telefono: "9456 1234",
         tipoMiembro: "Funcionario",
         actividad: "Yoga",
         tipoActividad: "Recreativo"
@@ -60,7 +60,7 @@ const datos = [
     {
         nombre: "Laura Martínez",
         correo: "laura@gmail.com",
-        telefono: "95671234",
+        telefono: "9567 1234",
         tipoMiembro: "Académico",
         actividad: "Charlas",
         tipoActividad: "Educativo"
