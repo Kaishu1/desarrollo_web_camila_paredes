@@ -76,7 +76,7 @@ function validarFormRegistro(event) {
     if(!validarTipoMiembro(inputTipoMiembro.value)){
         errorTipoMiembro.classList.add('visible')
     }else{
-        errorTipomiembro.classList.remove('visible')
+        errorTipoMiembro.classList.remove('visible')
     }
 }
 
