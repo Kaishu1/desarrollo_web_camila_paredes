@@ -16,6 +16,54 @@ const datos = [
         tipoMiembro: "Postgrado",
         actividad:"morder",
         tipoActividad:"Artístico"
+    },
+    {
+        nombre: "Juan Pérez",
+        correo: "juanp@gmail.com",
+        telefono: "98765432",
+        tipoMiembro: "Funcionario",
+        actividad: "Fútbol",
+        tipoActividad: "Deporte"
+    },
+    {
+        nombre: "María López",
+        correo: "maria@gmail.com",
+        telefono: "91234567",
+        tipoMiembro: "Académico",
+        actividad: "Investigación",
+        tipoActividad: "Educativo"
+    },
+    {
+        nombre: "Pedro González",
+        correo: "pedro@gmail.com",
+        telefono: "99887766",
+        tipoMiembro: "Pregrado",
+        actividad: "Voluntariado",
+        tipoActividad: "Social / Voluntariado"
+    },
+    {
+        nombre: "Ana Torres",
+        correo: "ana@gmail.com",
+        telefono: "93456789",
+        tipoMiembro: "Postgrado",
+        actividad: "Pintura",
+        tipoActividad: "Artístico"
+    },
+    {
+        nombre: "Diego Rojas",
+        correo: "diego@gmail.com",
+        telefono: "94561234",
+        tipoMiembro: "Funcionario",
+        actividad: "Yoga",
+        tipoActividad: "Recreativo"
+    },
+    {
+        nombre: "Laura Martínez",
+        correo: "laura@gmail.com",
+        telefono: "95671234",
+        tipoMiembro: "Académico",
+        actividad: "Charlas",
+        tipoActividad: "Educativo"
     }
 ]
 
