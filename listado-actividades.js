@@ -4,7 +4,7 @@ const datos = [
     {
         nombre: "Camila Paredes",
         correo: "camistar03@gmail.com",
-        telefono: "57155429",
+        telefono: "5715 5429",
         tipoMiembro: "Pregrado",
         actividad: "GYM",
         tipoActividad: "Deporte"
@@ -34,7 +34,7 @@ function renderizarTablita(lista){
         tdCorreo.textContent = miembro.correo;
 
         const tdTelefono = document.createElement("td");
-        tdTelefono.textContent = miembro.telefono;
+        tdTelefono.textContent = "+56 9" + miembro.telefono; // arreglo formato telefono
 
         const tdTipoMiembro = document.createElement("td");
         tdTipoMiembro.textContent = miembro.tipoMiembro;
@@ -63,16 +63,28 @@ function renderizarTablita(lista){
 renderizarTablita(datos);
 
 const filtroMiembro = document.getElementById("filtro-miembro");
+const filtroActividad = document.getElementById("filtro-actividad")
 
-filtroMiembro.addEventListener("change", () => {
-    const valorFiltro = filtroMiembro.value;
 
-    if (valorFiltro === "todos") {
-        renderizarTablita(datos);
-    } else {
-        const datosFiltrados = datos.filter((miembro) => miembro.tipoMiembro === valorFiltro);
-        renderizarTablita(datosFiltrados);
+// filtrooooooooooooos 
+
+function aplicarFiltros() {
+    const valorMiembro = filtroMiembro.value;
+    const valorActividad = filtroActividad.value;
+
+    let filtrados = datos;
+    // por tipo de miembro (pregrado, postgrado, funcionario, academico)
+    if (valorMiembro !== "todos") {
+        filtrados = filtrados.filter(m => m.tipoMiembro === valorMiembro);
     }
-});
+    // por tipo de actividad (deporte, artistico, social, etc)
+    if (valorActividad !== "todos") {
+        filtrados = filtrados.filter(m => m.tipoActividad === valorActividad);
+    }
+
+    renderizarTablita(filtrados);
+}
 
 
+filtroMiembro.addEventListener("change", aplicarFiltros);
+filtroActividad.addEventListener("change", aplicarFiltros);
