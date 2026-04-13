@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html>
-<header>
-    <h1>Listado de Actividades</h1>
-</header>
+<head>
+    <link rel="stylesheet" href="listado-actividades.css">
+</head>
+
     
 <body>
-    <table>
+    <header>
+      <h1>Listado de Actividades</h1>
+    </header>
+    <select id="filtro-miembro">
+        <option value="todos">Todos</option>
+        <option value="Pregrado"> Pregrado </option>
+        <option value="Postgrado"> Postgrado</option>
+        <option value="Funcionario"> Funcionario </option>
+        <option value="Académico"> Académico </option>
+    </select>
+    <table border="1">
         <thead>
             <tr>
                 <th>Nombre</th>

@@ -21,38 +21,58 @@ const datos = [
 
 const tablita = document.getElementById("tabla-body");
 
-datos.forEach((miembro) => {
-    const fila = document.createElement("tr");
+function renderizarTablita(lista){
+    tablita.innerHTML = "";
 
-    const tdNombre = document.createElement("td");
-    tdNombre.textContent = miembro.nombre;
+    lista.forEach((miembro) =>{
+        const fila = document.createElement("tr");
 
-    const tdCorreo = document.createElement("td");
-    tdCorreo.textContent = miembro.correo;
+        const tdNombre = document.createElement("td");
+        tdNombre.textContent = miembro.nombre;
 
-    const tdTelefono = document.createElement("td");
-    tdTelefono.textContent = miembro.telefono;
+        const tdCorreo = document.createElement("td");
+        tdCorreo.textContent = miembro.correo;
 
-    const tdTipoMiembro = document.createElement("td");
-    tdTipoMiembro.textContent = miembro.tipoMiembro;
+        const tdTelefono = document.createElement("td");
+        tdTelefono.textContent = miembro.telefono;
 
-    const tdActividad = document.createElement("td");
-    tdActividad.textContent = miembro.actividad;
+        const tdTipoMiembro = document.createElement("td");
+        tdTipoMiembro.textContent = miembro.tipoMiembro;
 
-    const tdTipoActividad = document.createElement("td");
-    tdTipoActividad.textContent = miembro.tipoActividad;
+        const tdActividad = document.createElement("td");
+        tdActividad.textContent = miembro.actividad;
 
-
-
-    fila.appendChild(tdNombre);
-    fila.appendChild(tdCorreo);
-    fila.appendChild(tdTelefono);
-    fila.appendChild(tdTipoMiembro);
-    fila.appendChild(tdActividad);
-    fila.appendChild(tdTipoActividad);
-
-    tablita.appendChild(fila);
+        const tdTipoActividad = document.createElement("td");
+        tdTipoActividad.textContent = miembro.tipoActividad;
 
 
+
+        fila.appendChild(tdNombre);
+        fila.appendChild(tdCorreo);
+        fila.appendChild(tdTelefono);
+        fila.appendChild(tdTipoMiembro);
+        fila.appendChild(tdActividad);
+        fila.appendChild(tdTipoActividad);
+
+        tablita.appendChild(fila);
+
+
+    });
+}
+
+renderizarTablita(datos);
+
+const filtroMiembro = document.getElementById("filtro-miembro");
+
+filtroMiembro.addEventListener("change", () => {
+    const valorFiltro = filtroMiembro.value;
+
+    if (valorFiltro === "todos") {
+        renderizarTablita(datos);
+    } else {
+        const datosFiltrados = datos.filter((miembro) => miembro.tipoMiembro === valorFiltro);
+        renderizarTablita(datosFiltrados);
+    }
 });
+
 
