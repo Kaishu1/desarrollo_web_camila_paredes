@@ -13,7 +13,7 @@ const datos = [
         nombre: "Shiro",
         correo: "gatopesao@gmail.com",
         telefono: "1234 1234",
-        tipoMiembro: "Postgrado",
+        tipoMiembro: "Pregrado",
         actividad:"morder",
         tipoActividad:"Artístico"
     },
@@ -64,7 +64,23 @@ const datos = [
         tipoMiembro: "Académico",
         actividad: "Charlas",
         tipoActividad: "Educativo"
-    }
+    },
+    {
+    nombre: "Sofía Ramírez",
+    correo: "sofia@gmail.com",
+    telefono: "9122 3344",
+    tipoMiembro: "Pregrado",
+    actividad: "Teatro",
+    tipoActividad: "Artístico"
+},
+{
+    nombre: "Carlos Muñoz",
+    correo: "carlos@gmail.com",
+    telefono: "9344 5566",
+    tipoMiembro: "Funcionario",
+    actividad: "Running",
+    tipoActividad: "Deporte"
+}
 ]
 
 const tablita = document.getElementById("tabla-body");
