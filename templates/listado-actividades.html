@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/listado-actividades.css')}}">
+</head>
+
+<body>
+    <header>
+      <h1> ♡ Listado de Actividades ♡</h1>
+    </header>
+    <h2>Filtros:</h2>
+    <div class="filtros">
+        <div class="filtro">
+            <label>Tipo Miembro</label>
+            <select id="filtro-miembro">
+                <option value="todos">Todos</option>
+                <option value="Pregrado"> Pregrado </option>
+                <option value="Postgrado"> Postgrado</option>
+                <option value="Funcionario"> Funcionario </option>
+                <option value="Académico"> Académico </option>
+            </select>
+        </div>
+
+        <div class="filtro">
+            <label>Tipo Actividad</label>
+            <select id="filtro-actividad">
+            <option value="todos">Todos</option>
+            <option value="Deporte">Deporte</option>
+            <option value="Artístico">Artístico</option>
+            <option value="Educativo">Educativo</option>
+            <option value="Social / Voluntariado"> Social / Voluntariado</option>
+            <option value="Recreativo">Recreativo</option>
+        </select>
+            
+        </div>
+
+    </div>
+
+
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Tipo Miembro</th>
+                <th>Actividad</th>
+                <th>Tipo Actividad</th>
+                
+            </tr>
+        </thead>
+        <tbody id="tabla-body">
+        </tbody>
+    </table>
+    <script src="listado-actividades.js"></script>
+
+</body>
+</html>

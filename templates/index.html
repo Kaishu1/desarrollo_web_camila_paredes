@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    </head>
+
+    <body>
+        
+        <h1>♡ ¡Bienvenido! ♡ </h1>
+
+        
+        <img 
+            width="250"
+            height="250"
+            id="CatImage"
+            title="Imagen de Xiaojie"
+            src="{{ url_for('static', filename='images/XiaojieCat.jpg') }}">
+
+        <div id="overlay">
+            <img 
+                id="imagenGrande"
+                src="{{ url_for('static', filename='images/XiaojieCat.jpg') }}">
+        </div>
+    
+
+        <nav>
+            <a href="{{ url_for('registroMiembros') }}">¡Regístrate!</a>
+            <a href="{{ url_for('listadoActividades') }}">Listado de Actividades</a>
+            <a href="{{ url_for('estadisticas') }}">Estadísticas</a>
+        </nav>
+
+    </body>
+    
+</html>
