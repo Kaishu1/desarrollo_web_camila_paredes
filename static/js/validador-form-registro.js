@@ -54,35 +54,56 @@ function validarFormRegistro(event) {
     let errorTelegram = document.getElementById("errorTelegram");
     let errorTipoMiembro = document.getElementById("errorTipoMiembro");
 
+    let mensajeExito = document.getElementById("mensajeExitoRegistro");
 
-    if(!validarNombre(inputNombre.value)){
+    let nombreValido = validarNombre(inputNombre.value);
+    let correoValido = validarCorreo(inputCorreo.value);
+    let telefonoValido = validarTelefono(inputTelefono.value);
+    let telegramValido = validarTelegram(inputTelegram.value);
+    let tipoMiembroValido = validarTipoMiembro(inputTipoMiembro.value);
+
+
+    if(!nombreValido){
         errorNombre.classList.add('visible')
     }else{
         errorNombre.classList.remove('visible')
     }
 
-    if(!validarCorreo(inputCorreo.value)){
+    if(!correoValido){
         errorCorreo.classList.add('visible')
     }else{
         errorCorreo.classList.remove('visible')
     }
     
-    if(!validarTelefono(inputTelefono.value)){
+    if(!telefonoValido){
         errorTelefono.classList.add('visible')
     }else{
         errorTelefono.classList.remove('visible')
     }
 
-    if(!validarTelegram(inputTelegram.value)){
+    if(!telegramValido){
         errorTelegram.classList.add('visible')
     }else{
         errorTelegram.classList.remove('visible')
     }
 
-    if(!validarTipoMiembro(inputTipoMiembro.value)){
+    if(!tipoMiembroValido){
         errorTipoMiembro.classList.add('visible')
     }else{
         errorTipoMiembro.classList.remove('visible')
+    }
+
+    let formularioValido = nombreValido &&
+        correoValido &&
+        telefonoValido &&
+        telegramValido &&
+        tipoMiembroValido;
+
+    if (formularioValido) {
+        mensajeExito.classList.add("visible");
+        formRegistro.reset();
+    } else {
+        mensajeExito.classList.remove("visible");
     }
 }
 

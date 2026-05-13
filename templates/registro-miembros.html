@@ -18,6 +18,7 @@
     
 </head>
 
+
 <body>
 
     <h1>Formulario de registro miembros</h1>
@@ -69,8 +70,12 @@
         </fieldset>
     </form>
 
-    
- 
+    <p id="mensajeExitoRegistro" class="exito">
+    Formulario enviado correctamente.
+    </p>
+
+    <script src="{{ url_for('static', filename='js/validador-form-registro.js') }}"></script>
+
 
     <h1>Actividades</h1>
 
@@ -118,8 +123,13 @@
         
     </form>
 
-    <script src="{{ url_for('static', filename='js/validador-form-registro.js') }}"></script>
+    <p id="mensajeExitoActividad" class="exito">
+    Actividad enviada correctamente.
+    </p>
+    
     <script src="{{ url_for('static', filename='js/validador-form-actividad.js') }}"></script>
+
+
 </body>
 </html>
 
