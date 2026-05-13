@@ -29,6 +29,34 @@
             <a href="{{ url_for('estadisticas') }}">Estadísticas</a>
         </nav>
 
+        <h2>Últimos miembros registrados</h2>
+
+        {% if miembros %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Fecha de registro</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for miembro in miembros %}
+                <tr>
+                    <td>{{ miembro.nombre }}</td>
+                    <td>{{ miembro.email }}</td>
+                    <td>+56 9 {{ miembro.telefono }}</td>
+                    <td>{{ miembro.fecha_registro }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Todavía no hay miembros registrados :( </p>
+        {% endif %}
+
     </body>
     
 </html>

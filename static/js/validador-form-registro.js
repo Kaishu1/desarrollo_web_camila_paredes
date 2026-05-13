@@ -1,108 +1,115 @@
 const formRegistro = document.getElementById("form-registro");
 
+// Validadores de miembro
 const validarNombre = (nombre) => {
-    let valido = false;
-    if(nombre && nombre.length > 2 && nombre.length <= 50) {
-        valido = true;
-    }return valido;
+    return nombre && nombre.length > 2 && nombre.length <= 50;
 };
 
 const validarCorreo = (correo) => {
-    let valido = false;
-    if (correo && correo.includes("@")){
-        valido = true;
-    }return valido
-}
-
-const validarTelefono = (telefono) => {
-    let valido = false;
-    if (telefono && telefono.replace(/\s+/g, "").trim().length == 8){ // 8 digitos sin contar espacios
-        valido = true;
-    } return valido;
-}
-const validarTelegram = (telegram) => {
-    let valido = false;
-    if (telegram) {
-        valido = true;
-    }return valido
-}
-
-const validarTipoMiembro = (opcion) => {
-    if (!opcion)
-        return false;
-    return true;
+    return correo && correo.includes("@");
 };
 
+const validarTelefono = (telefono) => {
+    return telefono && telefono.replace(/\s+/g, "").trim().length === 8;
+};
 
-// Formulario de Registro 
+const validarTelegram = (telegram) => {
+    return telegram;
+};
+
+const validarTipoMiembro = (opcion) => {
+    return opcion;
+};
+
+// Validadores de actividad
+const validarNombreActividad = (actividad) => {
+    return actividad && actividad.length > 3;
+};
+
+const validarTipoActividad = (opcion) => {
+    return opcion;
+};
+
+const validarHoras = (horas) => {
+    return horas >= 1 && horas <= 40;
+};
+
+const validarImagen = (inputImagen) => {
+    return inputImagen.files.length > 0;
+};
 
 function validarFormRegistro(event) {
-    event.preventDefault()
-    console.log("Enviando..."); 
+    // Primero evitamos que se envíe automáticamente.
+    // Si todo está válido, al final lo enviamos con formRegistro.submit().
+    event.preventDefault();
 
-    // obtenemo elementos del DOM por el id
-
+    // inputs miembro
     let inputNombre = document.getElementById("nombre");
     let inputCorreo = document.getElementById("correo");
     let inputTelefono = document.getElementById("telefono");
     let inputTelegram = document.getElementById("telegram");
     let inputTipoMiembro = document.getElementById("tipoMiembro");
 
+    // errores miembro
     let errorNombre = document.getElementById("errorNombre");
     let errorCorreo = document.getElementById("errorCorreo");
     let errorTelefono = document.getElementById("errorTelefono");
     let errorTelegram = document.getElementById("errorTelegram");
     let errorTipoMiembro = document.getElementById("errorTipoMiembro");
 
-    let mensajeExito = document.getElementById("mensajeExitoRegistro");
+    // inputs actividad
+    let inputNombreActividad = document.getElementById("nombreActividad");
+    let inputTipoActividad = document.getElementById("tipoActividad");
+    let inputHoras = document.getElementById("horasActividad");
+    let inputImagenActividad = document.getElementById("imagenActividad");
 
+    // errores actividad
+    let errorNombreActividad = document.getElementById("errorNombreActividad");
+    let errorTipoActividad = document.getElementById("errorTipoActividad");
+    let errorHorasActividad = document.getElementById("errorHorasActividad");
+    let errorImagenActividad = document.getElementById("errorImagenActividad");
+
+    // validaciones miembro
     let nombreValido = validarNombre(inputNombre.value);
     let correoValido = validarCorreo(inputCorreo.value);
     let telefonoValido = validarTelefono(inputTelefono.value);
     let telegramValido = validarTelegram(inputTelegram.value);
     let tipoMiembroValido = validarTipoMiembro(inputTipoMiembro.value);
 
+    // validaciones actividad
+    let nombreActividadValido = validarNombreActividad(inputNombreActividad.value);
+    let tipoActividadValido = validarTipoActividad(inputTipoActividad.value);
+    let horasValido = validarHoras(inputHoras.value);
+    let imagenValida = validarImagen(inputImagenActividad);
 
-    if(!nombreValido){
-        errorNombre.classList.add('visible')
-    }else{
-        errorNombre.classList.remove('visible')
-    }
+    // mostrar/ocultar errores miembro
+    errorNombre.classList.toggle("visible", !nombreValido);
+    errorCorreo.classList.toggle("visible", !correoValido);
+    errorTelefono.classList.toggle("visible", !telefonoValido);
+    errorTelegram.classList.toggle("visible", !telegramValido);
+    errorTipoMiembro.classList.toggle("visible", !tipoMiembroValido);
 
-    if(!correoValido){
-        errorCorreo.classList.add('visible')
-    }else{
-        errorCorreo.classList.remove('visible')
-    }
-    
-    if(!telefonoValido){
-        errorTelefono.classList.add('visible')
-    }else{
-        errorTelefono.classList.remove('visible')
-    }
+    // mostrar/ocultar errores actividad
+    errorNombreActividad.classList.toggle("visible", !nombreActividadValido);
+    errorTipoActividad.classList.toggle("visible", !tipoActividadValido);
+    errorHorasActividad.classList.toggle("visible", !horasValido);
+    errorImagenActividad.classList.toggle("visible", !imagenValida);
 
-    if(!telegramValido){
-        errorTelegram.classList.add('visible')
-    }else{
-        errorTelegram.classList.remove('visible')
-    }
-
-    if(!tipoMiembroValido){
-        errorTipoMiembro.classList.add('visible')
-    }else{
-        errorTipoMiembro.classList.remove('visible')
-    }
-
-    let formularioValido = nombreValido &&
+    let formularioValido =
+        nombreValido &&
         correoValido &&
         telefonoValido &&
         telegramValido &&
-        tipoMiembroValido;
+        tipoMiembroValido &&
+        nombreActividadValido &&
+        tipoActividadValido &&
+        horasValido &&
+        imagenValida;
 
     if (formularioValido) {
-        mensajeExito.classList.add("visible");
-        formRegistro.reset();
+        formRegistro.submit();
     } else {
+        const mensajeExito = document.getElementById("mensajeExitoFormulario");
         mensajeExito.classList.remove("visible");
     }
 }

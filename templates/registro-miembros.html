@@ -24,7 +24,7 @@
     <h1>Formulario de registro miembros</h1>
 
 
-    <form id="form-registro">
+    <form id="form-registro" method="POST" action="{{ url_for('registroMiembros') }}" enctype="multipart/form-data">
         <fieldset>
             <div>
                 <label for="nombre">  Nombre completo</label>
@@ -66,30 +66,21 @@
                 
 
             </div>
-            <button type="submit"> Registrarse </button>
-        </fieldset>
-    </form>
 
-    <p id="mensajeExitoRegistro" class="exito">
-    Formulario enviado correctamente.
-    </p>
-
-    <script src="{{ url_for('static', filename='js/validador-form-registro.js') }}"></script>
-
-
-    <h1>Actividades</h1>
-
-    <form id="form-actividad">
-        <fieldset>
+            <br>
+        
+        
             <div>
                 <label for="nombreActividad" > ¿Qué actividad realizas?</label>
-                <input type="text" id="nombreActividad">
+                <input type="text" id="nombreActividad" name="nombreActividad">
                 <span class="error" id="errorNombreActividad"> Debe ingresar una actividad </span>
             </div>
+
             <br>
+
             <div>
                 <label for="tipoActividad"> Tipo: </label>
-                <select id="tipoActividad">
+                <select id="tipoActividad" name="tipoActividad">
                     <option value=""> -- Seleccione una opción -- </option>
                     <option value="deporte">Deporte</option>
                     <option value="artistico">Artístico</option>
@@ -102,14 +93,14 @@
             <br>
             <div>
                 <label for="horasActividad">Horas semanales dedicadas:</label>
-                <input type="number" id="horasActividad" min="1" max="40">
+                <input type="number" id="horasActividad" name="horasActividad" min="1" max="40">
                 <span class="error" id="errorHorasActividad" visible>Ingrese un número entre 1 y 40</span>
             </div>
             <br>
 
             <div>
                 <label for="imagenActividad">Imagen</label>
-                <input type="file" id="imagenActividad" accept="image/*">
+                <input type="file" id="imagenActividad" name="imagenActividad" accept="image/*">
                 <span class="error" id="errorImagenActividad"> Debe seleccionar una imagen de su actividad
 
                 </span>
@@ -117,20 +108,18 @@
             <br>
             <div>
                 <label for="videoActividad">Video (opcional)</label>
-                <input type="file" id="videoActividad" accept="video/*">
+                <input type="file" id="videoActividad" name="videoActividad" accept="video/*">
             </div>
             <br>
             <button type="submit"> Enviar </button>
         </fieldset>
-        
-        
     </form>
 
-    <p id="mensajeExitoActividad" class="exito">
-    Actividad enviada correctamente.
+    <p id="mensajeExitoFormulario" class="exito">
+        Tu respuesta ha sido enviada correctamente :)
     </p>
     
-    <script src="{{ url_for('static', filename='js/validador-form-actividad.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/validador-form-registro.js') }}"></script>
 
 
 </body>
