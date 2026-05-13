@@ -21,6 +21,10 @@ const validarHoras = (horas) => {
     } return valido;
 };
 
+const validarImagen = (inputImagen) => {
+    return inputImagen.files.length >0;
+}
+
 
 
 
@@ -35,16 +39,19 @@ function validarFormActividad(event) {
     let inputNombreActividad = document.getElementById("nombreActividad");
     let inputTipoActividad = document.getElementById("tipoActividad");
     let inputHoras = document.getElementById("horasActividad");
+    let inputImagenActividad = document.getElementById("imagenActividad");
 
     let errorNombreActividad = document.getElementById("errorNombreActividad");
     let errorTipoActividad = document.getElementById("errorTipoActividad");
     let errorHorasActividad = document.getElementById("errorHorasActividad");
+    let errorImagenActividad = document.getElementById("errorImagenActividad");
 
     let mensajeExitoActividad = document.getElementById("mensajeExitoActividad");
 
     let nombreActividadValido = validarNombreActividad(inputNombreActividad.value);
     let tipoActividadValido = validarTipoActividad(inputTipoActividad.value);
     let horasValido = validarHoras(inputHoras.value);
+    let imagenValida = validarImagen(inputImagenActividad);
 
 
 
@@ -69,11 +76,19 @@ function validarFormActividad(event) {
         errorHorasActividad.classList.remove('visible')
     };
 
-    
+    // imagen obligatoria
+    if (!imagenValida) {
+        errorImagenActividad.classList.add("visible");
+    } else {
+        errorImagenActividad.classList.remove("visible");
+    }
+
+
 
     let formularioValido = nombreActividadValido &&
     tipoActividadValido &&
-    horasValido;
+    horasValido &&
+    imagenValida;
 
     if (formularioValido) {
         mensajeExitoActividad.classList.add("visible");
