@@ -3,4 +3,4 @@ CC5002-1 - Otoño 2026
 
 Hola soy un read me :)
 
-(no alcancé a escribir nada aquí :c no me dio el tiempo)
+Nota: hice súper poco de la Tarea 2 :C andaba corta de tiempo. Piedad!!
