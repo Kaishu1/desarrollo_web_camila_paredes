@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de miembros</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+
+<body>
+    <h1>Listado de miembros</h1>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('registroMiembros') }}">¡Regístrate!</a>
+        <a href="{{ url_for('estadisticas') }}">Estadísticas</a>
+    </nav>
+
+    <div class="encabezado-listado">
+        <h2>Miembros registrados</h2>
+
+        <form class="filtros-miembros" method="GET" action="{{ url_for('listadoMiembros') }}">
+            <div class="filtro">
+                <label for="tipoActividad">Tipo de actividad</label>
+                <select id="tipoActividad" name="tipoActividad">
+                    <option value="todos" {% if tipo_seleccionado == "todos" %}selected{% endif %}>Todos</option>
+                    <option value="arte" {% if tipo_seleccionado == "arte" %}selected{% endif %}>Arte</option>
+                    <option value="deporte" {% if tipo_seleccionado == "deporte" %}selected{% endif %}>Deporte</option>
+                    <option value="tecnología" {% if tipo_seleccionado == "tecnología" %}selected{% endif %}>Tecnología</option>
+                    <option value="social" {% if tipo_seleccionado == "social" %}selected{% endif %}>Social</option>
+                    <option value="recreación" {% if tipo_seleccionado == "recreación" %}selected{% endif %}>Recreación</option>
+                    <option value="otra" {% if tipo_seleccionado == "otra" %}selected{% endif %}>Otra</option>
+                </select>
+            </div>
+
+            <button type="submit">Filtrar</button>
+        </form>
+    </div>
+
+    {% if registros %}
+    <div class="tabla-scroll">
+        <table class="tabla-registros">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Comuna</th>
+                    <th>Actividad</th>
+                    <th>Tipo</th>
+                    <th>Día</th>
+                    <th>Hora de inicio</th>
+                    <th>Duración</th>
+                    <th>Descripción</th>
+                    <th>Imagen</th>
+                    <th>Fecha de registro</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for miembro, actividad, foto, comuna in registros %}
+                <tr class="fila-clicable" onclick="window.location='{{ url_for('detalleMiembro', miembro_id=miembro.id) }}'">
+                    <td>{{ miembro.nombre }}</td>
+                    <td>{{ miembro.email }}</td>
+                    <td>+56 9 {{ miembro.telefono }}</td>
+                    <td>
+                        {% if comuna %}
+                            {{ comuna.nombre }}
+                        {% else %}
+                            {{ miembro.comuna_id }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if actividad %}
+                            {{ actividad.nombre }}
+                        {% else %}
+                            Sin actividad
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if actividad %}
+                            {{ actividad.tipo }}
+                        {% else %}
+                            Sin tipo
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if actividad %}
+                            {{ actividad.dia }}
+                        {% else %}
+                            Sin día
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if actividad %}
+                            {{ actividad.hora_inicio }}
+                        {% else %}
+                            Sin hora
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if actividad %}
+                            {{ actividad.duracion }}
+                        {% else %}
+                            Sin duración
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if actividad and actividad.descripcion %}
+                            {{ actividad.descripcion }}
+                        {% else %}
+                            Sin descripción
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if foto %}
+                            <img
+                                class="foto-registro"
+                                src="{{ url_for('static', filename=foto.ruta_archivo.replace('static/', '')) }}"
+                                alt="{{ foto.nombre_archivo }}">
+                        {% else %}
+                            Sin imagen
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if miembro.fecha_registro %}
+                            {{ miembro.fecha_registro.strftime("%d-%m-%Y %H:%M") }}
+                        {% else %}
+                            Sin fecha
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="paginacion">
+        {% if pagina > 1 %}
+            <a href="{{ url_for('listadoMiembros', pagina=pagina - 1, tipoActividad=tipo_seleccionado) }}">Anterior</a>
+        {% else %}
+            <span>Anterior</span>
+        {% endif %}
+
+        <strong>Página {{ pagina }} de {{ total_paginas }}</strong>
+
+        {% if pagina < total_paginas %}
+            <a href="{{ url_for('listadoMiembros', pagina=pagina + 1, tipoActividad=tipo_seleccionado) }}">Siguiente</a>
+        {% else %}
+            <span>Siguiente</span>
+        {% endif %}
+    </div>
+    {% else %}
+    <p>Todavía no hay miembros registrados.</p>
+    {% endif %}
+</body>
+</html>
