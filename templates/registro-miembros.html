@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/registro-miembros.css')}}">
     <meta charset="UTF-8">
@@ -13,93 +13,93 @@
         .actividad-item .nombre { font-weight: bold; }
         .contador { color: #666; font-size: 0.9em; margin-bottom: 10px; }
     </style>
+    
+    
+    
 </head>
 
+
 <body>
+
     <h1>Formulario de registro miembros</h1>
+
 
     <form id="form-registro" method="POST" action="{{ url_for('registroMiembros') }}" enctype="multipart/form-data">
         <fieldset>
-            <legend>Datos del miembro</legend>
-
             <div>
-                <label for="nombre">Nombre completo</label>
-                <input type="text" id="nombre" name="nombre" placeholder="Juan López">
-                <span class="error" id="errorNombre">Ingrese su nombre completo</span>
-            </div>
-
+                <label for="nombre">  Nombre completo</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Juan López"> 
+                <span class="error" id="errorNombre" visible> Ingrese su nombre completo </span>
+            </div> 
             <br>
-
-            <div>
-                <label for="correo">Correo</label>
+            <div>       
+                <label for="correo"> Correo </label>
                 <input type="email" id="correo" name="correo" placeholder="correo@gmail.com">
-                <span class="error" id="errorCorreo">Ingrese un correo válido</span>
+                <span class="error" id="errorCorreo" visible> Ingrese un correo válido </span>
+                
             </div>
-
             <br>
-
-            <div>
-                <label for="telefono">Teléfono +56 9</label>
+            <div>       
+                <label for="telefono"> Teléfono +56 9 </label>
                 <input type="tel" id="telefono" name="telefono" placeholder="1234 5678">
-                <span class="error" id="errorTelefono">Ingrese un número válido de 8 dígitos</span>
+                <span class="error" id="errorTelefono" visible>Ingrese un número válido de 8 dígitos</span>
             </div>
 
             <br>
-
             <div>
                 <label for="comuna">Comuna</label>
                 <select id="comuna" name="comuna">
-                    <option value="">-- Seleccione una comuna --</option>
+                    <option value="">-- Seleccione comuna --</option>
                     <option value="10301">Comuna de prueba</option>
                 </select>
                 <span class="error" id="errorComuna">Debe seleccionar una comuna</span>
             </div>
-        </fieldset>
+            <br>           
 
-        <br>
-
-        <fieldset>
-            <legend>Datos de la actividad</legend>
-
+        
+        
             <div>
-                <label for="nombreActividad">Nombre de actividad</label>
+                <label for="nombreActividad" > ¿Qué actividad realizas?</label>
                 <input type="text" id="nombreActividad" name="nombreActividad">
-                <span class="error" id="errorNombreActividad">Debe ingresar una actividad</span>
+                <span class="error" id="errorNombreActividad"> Debe ingresar una actividad </span>
             </div>
 
             <br>
 
             <div>
-                <label for="tipoActividad">Tipo de actividad</label>
+                <label for="tipoActividad"> Tipo: </label>
                 <select id="tipoActividad" name="tipoActividad">
-                    <option value="">-- Seleccione una opción --</option>
-                    <option value="arte">Arte</option>
+                    <option value=""> -- Seleccione una opción -- </option>
                     <option value="deporte">Deporte</option>
-                    <option value="tecnología">Tecnología</option>
-                    <option value="social">Social</option>
-                    <option value="recreación">Recreación</option>
-                    <option value="otra">Otra</option>
+                    <option value="artistico">Artístico</option>
+                    <option value="educativo">Educativo</option>
+                    <option value="social"> Social / Voluntariado</option>
+                    <option value="recreativo">Recreativo</option>
                 </select>
-                <span class="error" id="errorTipoActividad">Debe seleccionar una opción</span>
+                <span class="error" id="errorTipoActividad"> Debe seleccionar una opción </span>
             </div>
-
             <br>
 
+            <div>
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe brevemente la actividad"></textarea>
+                <span class="error" id="errorDescripcion">Debe ingresar una descripción</span>
+            </div>
+            <br>
             <div>
                 <label for="dia">Día</label>
                 <select id="dia" name="dia">
-                    <option value="">-- Seleccione un día --</option>
+                    <option value="">-- Seleccione día --</option>
                     <option value="lunes">Lunes</option>
                     <option value="martes">Martes</option>
-                    <option value="miércoles">Miércoles</option>
+                    <option value="miercoles">Miércoles</option>
                     <option value="jueves">Jueves</option>
                     <option value="viernes">Viernes</option>
-                    <option value="sábado">Sábado</option>
+                    <option value="sabado">Sábado</option>
                     <option value="domingo">Domingo</option>
                 </select>
                 <span class="error" id="errorDia">Debe seleccionar un día</span>
             </div>
-
             <br>
 
             <div>
@@ -107,41 +107,34 @@
                 <input type="time" id="horaInicio" name="horaInicio">
                 <span class="error" id="errorHoraInicio">Debe ingresar una hora de inicio</span>
             </div>
-
             <br>
 
             <div>
                 <label for="duracion">Duración</label>
                 <input type="text" id="duracion" name="duracion" placeholder="01:30">
-                <span class="error" id="errorDuracion">Debe ingresar la duración</span>
+                <span class="error" id="errorDuracion">Debe ingresar una duración</span>
             </div>
-
             <br>
-
-            <div>
-                <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" name="descripcion" rows="4"></textarea>
-                <span class="error" id="errorDescripcion">Debe ingresar una descripción</span>
-            </div>
-
-            <br>
+            
 
             <div>
                 <label for="foto">Imagen</label>
                 <input type="file" id="foto" name="foto" accept="image/*">
                 <span class="error" id="errorFoto">Debe seleccionar una imagen de su actividad</span>
             </div>
+            <br>
+            
+            <button type="submit"> Enviar </button>
         </fieldset>
-
-        <br>
-
-        <button type="submit">Enviar</button>
     </form>
 
     <p id="mensajeExitoFormulario" class="exito">
         Tu respuesta ha sido enviada correctamente :)
     </p>
+    
+<!-- <script src="{{ url_for('static', filename='js/validador-form-registro.js') }}"></script> -->
 
-    <!-- <script src="{{ url_for('static', filename='js/validador-form-registro.js') }}"></script> -->
+
 </body>
 </html>
+

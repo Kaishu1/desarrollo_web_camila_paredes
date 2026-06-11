@@ -1,28 +1,28 @@
-import os
-from uuid import uuid4
-
 from flask import Flask, render_template, request, redirect, url_for
-from werkzeug.utils import secure_filename
-
 from database.db import Actividad, Comuna, Foto, db, Miembro, crear_registro_completo
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://cc5002:programacionweb@localhost:3306/tarea2"
-
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "static", "uploads")
+
+UPLOAD_FOLDER = "static/uploads"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 db.init_app(app)
-
+# r u t a s 
 @app.route("/")
 @app.route("/index")
 def index():
+
     ultimos_miembros = Miembro.query.order_by(
         Miembro.fecha_registro.desc()
     ).limit(5).all()
 
-    return render_template("index.html", miembros=ultimos_miembros)
+    return render_template("index.html",miembros=ultimos_miembros)
+
 
 @app.route("/estadisticas")
 def estadisticas():
@@ -31,6 +31,7 @@ def estadisticas():
 @app.route("/listado-actividades")
 def listadoActividades():
     return render_template("listado-actividades.html")
+
 
 @app.route("/listado-miembros")
 def listadoMiembros():
@@ -82,6 +83,7 @@ def listadoMiembros():
         total_paginas=total_paginas,
     )
 
+
 @app.route("/detalle-miembro/<int:miembro_id>")
 def detalleMiembro(miembro_id):
     miembro = Miembro.query.get_or_404(miembro_id)
@@ -90,8 +92,8 @@ def detalleMiembro(miembro_id):
         Actividad.id.desc()
     ).all()
 
-    actividades_ids = [actividad.id for actividad in actividades]
     fotos_por_actividad = {}
+    actividades_ids = [actividad.id for actividad in actividades]
 
     if actividades_ids:
         fotos = Foto.query.filter(Foto.actividad_id.in_(actividades_ids)).all()
@@ -106,55 +108,52 @@ def detalleMiembro(miembro_id):
         fotos_por_actividad=fotos_por_actividad,
     )
 
+
 @app.route("/registro-miembros", methods=["GET", "POST"])
 def registroMiembros():
     if request.method == "POST":
-        nombre = request.form["nombre"]
-        email = request.form["correo"]
-        telefono = request.form["telefono"]
-        comuna_id = int(request.form["comuna"])
-        nombre_actividad = request.form["nombreActividad"]
-        tipo_actividad = request.form["tipoActividad"]
-        dia = request.form["dia"]
-        hora_inicio = request.form["horaInicio"]
-        duracion = request.form["duracion"]
-        descripcion = request.form["descripcion"]
+        nombre = request.form.get("nombre")
+        email = request.form.get("correo")
+        telefono = request.form.get("telefono")
+        comuna_id = request.form.get("comuna")
 
+        nombre_actividad = request.form.get("nombreActividad")
+        tipo_actividad = request.form.get("tipoActividad")
+        dia = request.form.get("dia")
+        hora_inicio = request.form.get("horaInicio")
+        duracion = request.form.get("duracion")
+        descripcion = request.form.get("descripcion")
+
+        # AQUÍ va lo de la foto
         foto = request.files.get("foto")
-        ruta_foto = None
-        nombre_foto = None
 
-        if foto and foto.filename:
-            os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
-            nombre_foto = secure_filename(foto.filename)
-            nombre_guardado = f"{uuid4().hex}_{nombre_foto}"
-            ruta_absoluta = os.path.join(app.config["UPLOAD_FOLDER"], nombre_guardado)
-            foto.save(ruta_absoluta)
-            ruta_foto = f"static/uploads/{nombre_guardado}"
+        ruta_archivo = None
+        nombre_archivo = None
 
-        try:
-            crear_registro_completo(
-                nombre,
-                email,
-                telefono,
-                comuna_id,
-                nombre_actividad,
-                tipo_actividad,
-                dia,
-                hora_inicio,
-                duracion,
-                descripcion,
-                ruta_foto,
-                nombre_foto,
-            )
-        except Exception:
-            db.session.rollback()
-            raise
+        if foto and foto.filename != "":
+            nombre_archivo = secure_filename(foto.filename)
+            ruta_archivo = os.path.join(app.config["UPLOAD_FOLDER"], nombre_archivo)
+            foto.save(ruta_archivo)
+
+        # DESPUÉS se guarda todo en la BD
+        crear_registro_completo(
+            nombre=nombre,
+            email=email,
+            telefono=telefono,
+            comuna_id=comuna_id,
+            nombre_actividad=nombre_actividad,
+            tipo_actividad=tipo_actividad,
+            dia=dia,
+            hora_inicio=hora_inicio,
+            duracion=duracion,
+            descripcion=descripcion,
+            ruta_archivo=ruta_archivo,
+            nombre_archivo=nombre_archivo
+        )
 
         return redirect(url_for("index"))
 
-    exito = request.args.get("exito")
-    return render_template("registro-miembros.html", exito=exito)
+    return render_template("registro-miembros.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
