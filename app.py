@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
-from database.db import Actividad, Comuna, Foto, db, Miembro, crear_registro_completo
+from flask import Flask, jsonify, render_template, request, redirect, url_for
+from database.db import Actividad, Comuna, Foto, Region, db, Miembro, crear_registro_completo
 from werkzeug.utils import secure_filename
 import os
 
@@ -13,6 +13,12 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 db.init_app(app)
 # r u t a s 
+
+
+def obtener_regiones():
+    return Region.query.order_by(Region.id).all()
+
+
 @app.route("/")
 @app.route("/index")
 def index():
@@ -109,8 +115,23 @@ def detalleMiembro(miembro_id):
     )
 
 
+@app.route("/comunas/<int:region_id>")
+def comunasPorRegion(region_id):
+    comunas = Comuna.query.filter_by(region_id=region_id).order_by(Comuna.nombre).all()
+
+    return jsonify([
+        {
+            "id": comuna.id,
+            "nombre": comuna.nombre,
+        }
+        for comuna in comunas
+    ])
+
+
 @app.route("/registro-miembros", methods=["GET", "POST"])
 def registroMiembros():
+    regiones = obtener_regiones()
+
     if request.method == "POST":
         nombre = request.form.get("nombre")
         email = request.form.get("correo")
@@ -153,7 +174,7 @@ def registroMiembros():
 
         return redirect(url_for("index"))
 
-    return render_template("registro-miembros.html")
+    return render_template("registro-miembros.html", regiones=regiones)
 
 if __name__ == "__main__":
     app.run(debug=True)

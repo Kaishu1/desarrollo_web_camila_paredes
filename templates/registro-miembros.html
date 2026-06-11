@@ -47,10 +47,20 @@
 
             <br>
             <div>
+                <label for="region">Región</label>
+                <select id="region" name="region">
+                    <option value="">-- Seleccione región --</option>
+                    {% for region in regiones %}
+                    <option value="{{ region.id }}">{{ region.nombre }}</option>
+                    {% endfor %}
+                </select>
+                <span class="error" id="errorRegion">Debe seleccionar una región</span>
+            </div>
+            <br>
+            <div>
                 <label for="comuna">Comuna</label>
-                <select id="comuna" name="comuna">
+                <select id="comuna" name="comuna" disabled>
                     <option value="">-- Seleccione comuna --</option>
-                    <option value="10301">Comuna de prueba</option>
                 </select>
                 <span class="error" id="errorComuna">Debe seleccionar una comuna</span>
             </div>
@@ -133,6 +143,7 @@
     </p>
     
 <!-- <script src="{{ url_for('static', filename='js/validador-form-registro.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/region-comuna.js') }}"></script>
 
 
 </body>
