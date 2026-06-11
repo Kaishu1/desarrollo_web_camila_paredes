@@ -91,7 +91,7 @@
                     {% for foto in fotos %}
                     <img
                         class="foto-detalle"
-                        src="{{ url_for('static', filename=foto.ruta_archivo.replace('static/', '')) }}"
+                        src="{{ url_for('static', filename=foto.ruta_archivo|ruta_static) }}"
                         alt="{{ foto.nombre_archivo }}">
                     {% endfor %}
                 </div>

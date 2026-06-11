@@ -115,7 +115,7 @@
                         {% if foto %}
                             <img
                                 class="foto-registro"
-                                src="{{ url_for('static', filename=foto.ruta_archivo.replace('static/', '')) }}"
+                                src="{{ url_for('static', filename=foto.ruta_archivo|ruta_static) }}"
                                 alt="{{ foto.nombre_archivo }}">
                         {% else %}
                             Sin imagen

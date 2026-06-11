@@ -15,6 +15,18 @@ db.init_app(app)
 # r u t a s 
 
 
+def ruta_static(ruta_archivo):
+    ruta = ruta_archivo.replace("\\", "/")
+
+    if ruta.startswith("static/"):
+        return ruta.replace("static/", "", 1)
+
+    return ruta
+
+
+app.jinja_env.filters["ruta_static"] = ruta_static
+
+
 def obtener_regiones():
     return Region.query.order_by(Region.id).all()
 
@@ -153,8 +165,9 @@ def registroMiembros():
 
         if foto and foto.filename != "":
             nombre_archivo = secure_filename(foto.filename)
-            ruta_archivo = os.path.join(app.config["UPLOAD_FOLDER"], nombre_archivo)
-            foto.save(ruta_archivo)
+            ruta_archivo = f"uploads/{nombre_archivo}"
+            ruta_guardado = os.path.join(app.static_folder, "uploads", nombre_archivo)
+            foto.save(ruta_guardado)
 
         # DESPUÉS se guarda todo en la BD
         crear_registro_completo(
