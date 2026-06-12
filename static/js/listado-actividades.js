@@ -1,70 +1,126 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const tarjetas = document.querySelectorAll(".actividad-foro[data-actividad-id]");
 
-const tablita = document.getElementById("tabla-body");
+  tarjetas.forEach((tarjeta) => {
+    const actividadId = tarjeta.dataset.actividadId;
+    const formulario = tarjeta.querySelector(".form-comentario");
 
-function renderizarTablita(lista){
-    tablita.innerHTML = "";
+    cargarComentarios(tarjeta, actividadId);
 
-    lista.forEach((miembro) =>{
-        const fila = document.createElement("tr");
+    if (formulario) {
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+        enviarComentario(tarjeta, actividadId, formulario);
+      });
+    }
+  });
+});
 
-        const tdNombre = document.createElement("td");
-        tdNombre.textContent = miembro.nombre;
+function mostrarError(tarjeta, mensaje) {
+  const error = tarjeta.querySelector("[data-comentarios-error]");
 
-        const tdCorreo = document.createElement("td");
-        tdCorreo.textContent = miembro.correo;
+  if (error) {
+    error.textContent = mensaje;
+  }
+}
 
-        const tdTelefono = document.createElement("td");
-        tdTelefono.textContent = "+56 9" + miembro.telefono; // arreglo formato telefono
+function limpiarError(tarjeta) {
+  mostrarError(tarjeta, "");
+}
 
-        const tdTipoMiembro = document.createElement("td");
-        tdTipoMiembro.textContent = miembro.tipoMiembro;
+function cargarComentarios(tarjeta, actividadId) {
+  const contenedor = tarjeta.querySelector("[data-comentarios-lista]");
 
-        const tdActividad = document.createElement("td");
-        tdActividad.textContent = miembro.actividad;
+  if (!contenedor) {
+    return;
+  }
 
-        const tdTipoActividad = document.createElement("td");
-        tdTipoActividad.textContent = miembro.tipoActividad;
+  fetch(`/api/actividad/${actividadId}/comentarios`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("No se pudieron cargar los comentarios");
+      }
+      return response.json();
+    })
+    .then((comentarios) => {
+      contenedor.innerHTML = "";
 
+      if (comentarios.length === 0) {
+        contenedor.textContent = "Todavía no hay comentarios.";
+        return;
+      }
 
+      comentarios.forEach((comentario) => {
+        const item = document.createElement("div");
+        item.classList.add("comentario-item");
 
-        fila.appendChild(tdNombre);
-        fila.appendChild(tdCorreo);
-        fila.appendChild(tdTelefono);
-        fila.appendChild(tdTipoMiembro);
-        fila.appendChild(tdActividad);
-        fila.appendChild(tdTipoActividad);
+        const encabezado = document.createElement("p");
+        encabezado.classList.add("comentario-encabezado");
+        encabezado.textContent = `${comentario.nombre} · ${comentario.fecha}`;
 
-        tablita.appendChild(fila);
+        const texto = document.createElement("p");
+        texto.classList.add("comentario-texto");
+        texto.textContent = comentario.texto;
 
-
+        item.appendChild(encabezado);
+        item.appendChild(texto);
+        contenedor.appendChild(item);
+      });
+    })
+    .catch((error) => {
+      mostrarError(tarjeta, error.message);
     });
 }
 
-renderizarTablita(datos);
+function validarComentario(nombre, texto) {
+  if (nombre.length < 3) {
+    return "El nombre debe tener al menos 3 caracteres.";
+  }
+  if (nombre.length > 80) {
+    return "El nombre no puede superar los 80 caracteres.";
+  }
+  if (texto.length < 5) {
+    return "El comentario debe tener al menos 5 caracteres.";
+  }
+  if (texto.length > 300) {
+    return "El comentario no puede superar los 300 caracteres.";
+  }
 
-const filtroMiembro = document.getElementById("filtro-miembro");
-const filtroActividad = document.getElementById("filtro-actividad")
-
-
-// filtrooooooooooooos 
-
-function aplicarFiltros() {
-    const valorMiembro = filtroMiembro.value;
-    const valorActividad = filtroActividad.value;
-
-    let filtrados = datos;
-    // por tipo de miembro (pregrado, postgrado, funcionario, academico)
-    if (valorMiembro !== "todos") {
-        filtrados = filtrados.filter(m => m.tipoMiembro === valorMiembro);
-    }
-    // por tipo de actividad (deporte, artistico, social, etc)
-    if (valorActividad !== "todos") {
-        filtrados = filtrados.filter(m => m.tipoActividad === valorActividad);
-    }
-
-    renderizarTablita(filtrados);
+  return "";
 }
 
+function enviarComentario(tarjeta, actividadId, formulario) {
+  const nombre = formulario.elements.nombre.value.trim();
+  const texto = formulario.elements.texto.value.trim();
+  const error = validarComentario(nombre, texto);
 
-filtroMiembro.addEventListener("change", aplicarFiltros);
-filtroActividad.addEventListener("change", aplicarFiltros);
+  if (error) {
+    mostrarError(tarjeta, error);
+    return;
+  }
+
+  limpiarError(tarjeta);
+
+  fetch(`/api/actividad/${actividadId}/comentarios`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ nombre, texto }),
+  })
+    .then((response) => {
+      return response.json().then((data) => {
+        if (!response.ok) {
+          throw new Error(data.error || "No se pudo guardar el comentario");
+        }
+        return data;
+      });
+    })
+    .then(() => {
+      formulario.reset();
+      cargarComentarios(tarjeta, actividadId);
+    })
+    .catch((error) => {
+      mostrarError(tarjeta, error.message);
+    });
+}

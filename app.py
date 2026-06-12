@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template, request, redirect, url_for
-from database.db import Actividad, BloqueHorario, Comuna, Foto, Region, db, Miembro, crear_registro_completo
+from database.db import Actividad, BloqueHorario, Comentario, Comuna, Foto, Region, db, Miembro, crear_registro_completo
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
@@ -258,6 +258,63 @@ def listadoActividades():
         pagina=pagina,
         total_paginas=total_paginas,
     )
+
+
+@app.route("/api/actividad/<int:actividad_id>/comentarios", methods=["GET"])
+def obtenerComentariosActividad(actividad_id):
+    actividad = Actividad.query.get(actividad_id)
+
+    if not actividad:
+        return jsonify({"error": "Actividad no encontrada"}), 404
+
+    comentarios = Comentario.query.filter_by(
+        actividad_id=actividad_id
+    ).order_by(
+        Comentario.fecha.desc()
+    ).all()
+
+    return jsonify([
+        {
+            "id": comentario.id,
+            "nombre": comentario.nombre,
+            "texto": comentario.texto,
+            "fecha": comentario.fecha.strftime("%d-%m-%Y %H:%M"),
+        }
+        for comentario in comentarios
+    ])
+
+
+@app.route("/api/actividad/<int:actividad_id>/comentarios", methods=["POST"])
+def crearComentarioActividad(actividad_id):
+    actividad = Actividad.query.get(actividad_id)
+
+    if not actividad:
+        return jsonify({"error": "Actividad no encontrada"}), 404
+
+    datos = request.get_json(silent=True) or {}
+    nombre = datos.get("nombre", "").strip()
+    texto = datos.get("texto", "").strip()
+
+    if len(nombre) < 3:
+        return jsonify({"error": "El nombre debe tener al menos 3 caracteres"}), 400
+    if len(nombre) > 80:
+        return jsonify({"error": "El nombre no puede superar los 80 caracteres"}), 400
+    if len(texto) < 5:
+        return jsonify({"error": "El comentario debe tener al menos 5 caracteres"}), 400
+    if len(texto) > 300:
+        return jsonify({"error": "El comentario no puede superar los 300 caracteres"}), 400
+
+    comentario = Comentario(
+        nombre=nombre,
+        texto=texto,
+        fecha=datetime.now(),
+        actividad_id=actividad_id,
+    )
+
+    db.session.add(comentario)
+    db.session.commit()
+
+    return jsonify({"mensaje": "Comentario agregado correctamente"})
 
 
 @app.route("/listado-miembros")

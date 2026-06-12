@@ -41,7 +41,7 @@
     {% if registros %}
     <section class="foro-actividades">
         {% for miembro, actividad, foto, comuna in registros %}
-        <article class="actividad-foro">
+        <article class="actividad-foro" {% if actividad %}data-actividad-id="{{ actividad.id }}"{% endif %}>
             <div class="actividad-imagen">
                 {% if foto %}
                     <img
@@ -68,6 +68,28 @@
                     <h3>Sin actividad</h3>
                     <p class="actividad-descripcion">Este miembro todavía no tiene una actividad registrada.</p>
                 {% endif %}
+
+                {% if actividad %}
+                <section class="comentarios-actividad">
+                    <h4>Comentarios</h4>
+                    <div class="lista-comentarios" data-comentarios-lista></div>
+
+                    <form class="form-comentario">
+                        <label>
+                            Nombre
+                            <input type="text" name="nombre" maxlength="80">
+                        </label>
+
+                        <label>
+                            Comentario
+                            <textarea name="texto" rows="3" maxlength="300"></textarea>
+                        </label>
+
+                        <p class="error-comentario" data-comentarios-error></p>
+                        <button type="submit">Comentar</button>
+                    </form>
+                </section>
+                {% endif %}
             </div>
         </article>
         {% endfor %}
@@ -91,5 +113,7 @@
     {% else %}
     <p>Todavía no hay actividades registradas.</p>
     {% endif %}
+
+    <script src="{{ url_for('static', filename='js/listado-actividades.js') }}"></script>
 </body>
 </html>

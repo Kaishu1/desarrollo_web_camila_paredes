@@ -65,6 +65,16 @@ class Foto(db.Model):
     actividad_id = db.Column(db.Integer, nullable=False)
 
 
+class Comentario(db.Model):
+    __tablename__ = "comentario"
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(80), nullable=False)
+    texto = db.Column(db.String(300), nullable=False)
+    fecha = db.Column(db.DateTime, nullable=False)
+    actividad_id = db.Column(db.Integer, nullable=False)
+
+
 def crear_registro_completo(
     nombre,
     email,
