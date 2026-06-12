@@ -26,6 +26,7 @@ class Miembro(db.Model):
     nombre = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(80), nullable=False)
     telefono = db.Column(db.String(15), nullable=False)
+    tipo_miembro = db.Column(db.String(30), nullable=False)
     fecha_registro = db.Column(db.DateTime, nullable=False)
     comuna_id = db.Column("comuna_id", db.Integer, nullable=False)
 
@@ -56,6 +57,7 @@ def crear_registro_completo(
     nombre,
     email,
     telefono,
+    tipo_miembro,
     comuna_id,
     nombre_actividad,
     tipo_actividad,
@@ -70,6 +72,7 @@ def crear_registro_completo(
         nombre=nombre,
         email=email,
         telefono=telefono,
+        tipo_miembro=tipo_miembro,
         fecha_registro=datetime.now(),
         comuna_id=comuna_id
     )

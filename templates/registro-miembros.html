@@ -47,6 +47,19 @@
 
             <br>
             <div>
+                <label for="tipo_miembro">Tipo de miembro</label>
+                <select id="tipo_miembro" name="tipo_miembro">
+                    <option value="">-- Seleccione tipo de miembro --</option>
+                    <option value="Estudiante de Pregrado">Estudiante de Pregrado</option>
+                    <option value="Estudiante de Postgrado">Estudiante de Postgrado</option>
+                    <option value="Funcionario(a)">Funcionario(a)</option>
+                    <option value="Académico(a)">Académico(a)</option>
+                </select>
+                <span class="error" id="errorTipoMiembro">Debe seleccionar un tipo de miembro</span>
+            </div>
+
+            <br>
+            <div>
                 <label for="region">Región</label>
                 <select id="region" name="region">
                     <option value="">-- Seleccione región --</option>
@@ -142,7 +155,7 @@
         Tu respuesta ha sido enviada correctamente :)
     </p>
     
-<!-- <script src="{{ url_for('static', filename='js/validador-form-registro.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/validador-form-registro.js') }}"></script>
 <script src="{{ url_for('static', filename='js/region-comuna.js') }}"></script>
 
 

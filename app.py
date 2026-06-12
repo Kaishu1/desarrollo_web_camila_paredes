@@ -26,6 +26,13 @@ def ruta_static(ruta_archivo):
 
 app.jinja_env.filters["ruta_static"] = ruta_static
 
+TIPOS_MIEMBRO = {
+    "Estudiante de Pregrado",
+    "Estudiante de Postgrado",
+    "Funcionario(a)",
+    "Académico(a)",
+}
+
 
 def obtener_regiones():
     return Region.query.order_by(Region.id).all()
@@ -45,6 +52,76 @@ def index():
 @app.route("/estadisticas")
 def estadisticas():
     return render_template("estadisticas.html")
+
+
+@app.route("/api/estadisticas/miembros-por-dia")
+def miembrosPorDia():
+    fecha_registro = db.func.date(Miembro.fecha_registro)
+
+    registros = db.session.query(
+        fecha_registro.label("dia"),
+        db.func.count(Miembro.id).label("cantidad"),
+    ).group_by(
+        fecha_registro,
+    ).order_by(
+        fecha_registro,
+    ).all()
+
+    return jsonify([
+        {
+            "dia": dia.strftime("%Y-%m-%d") if hasattr(dia, "strftime") else str(dia),
+            "cantidad": int(cantidad),
+        }
+        for dia, cantidad in registros
+    ])
+
+
+@app.route("/api/estadisticas/actividades-por-tipo")
+def actividadesPorTipo():
+    registros = db.session.query(
+        Actividad.tipo,
+        db.func.count(Actividad.id).label("cantidad"),
+    ).group_by(
+        Actividad.tipo,
+    ).order_by(
+        Actividad.tipo,
+    ).all()
+
+    return jsonify([
+        {
+            "tipo": tipo,
+            "cantidad": int(cantidad),
+        }
+        for tipo, cantidad in registros
+    ])
+
+
+@app.route("/api/estadisticas/actividades-por-comuna")
+def actividadesPorComuna():
+    registros = db.session.query(
+        Comuna.nombre,
+        db.func.count(Actividad.id).label("cantidad"),
+    ).join(
+        Miembro,
+        Miembro.comuna_id == Comuna.id,
+    ).join(
+        Actividad,
+        Actividad.miembro_id == Miembro.id,
+    ).group_by(
+        Comuna.id,
+        Comuna.nombre,
+    ).order_by(
+        Comuna.nombre,
+    ).all()
+
+    return jsonify([
+        {
+            "comuna": comuna,
+            "cantidad": int(cantidad),
+        }
+        for comuna, cantidad in registros
+    ])
+
 
 @app.route("/listado-actividades")
 def listadoActividades():
@@ -148,7 +225,11 @@ def registroMiembros():
         nombre = request.form.get("nombre")
         email = request.form.get("correo")
         telefono = request.form.get("telefono")
+        tipo_miembro = request.form.get("tipo_miembro")
         comuna_id = request.form.get("comuna")
+
+        if tipo_miembro not in TIPOS_MIEMBRO:
+            return "Tipo de miembro inválido", 400
 
         nombre_actividad = request.form.get("nombreActividad")
         tipo_actividad = request.form.get("tipoActividad")
@@ -174,6 +255,7 @@ def registroMiembros():
             nombre=nombre,
             email=email,
             telefono=telefono,
+            tipo_miembro=tipo_miembro,
             comuna_id=comuna_id,
             nombre_actividad=nombre_actividad,
             tipo_actividad=tipo_actividad,

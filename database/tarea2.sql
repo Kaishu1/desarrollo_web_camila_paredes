@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS `tarea2`.`miembro` (
   `nombre` VARCHAR(255) NOT NULL,
   `email` VARCHAR(80) NOT NULL,
   `telefono` VARCHAR(15) NOT NULL,
+  `tipo_miembro` VARCHAR(30) NOT NULL,
   `fecha_registro` DATETIME NOT NULL,
   `comuna_id` INT NOT NULL,
   PRIMARY KEY (`id`),

@@ -37,6 +37,7 @@
                 <th>Nombre</th>
                 <th>Correo</th>
                 <th>Teléfono</th>
+                <th>Tipo de miembro</th>
                 <th>Fecha de registro</th>
             </tr>
         </thead>
@@ -47,6 +48,7 @@
                 <td>{{ miembro.nombre }}</td>
                 <td>{{ miembro.email }}</td>
                 <td>+56 9 {{ miembro.telefono }}</td>
+                <td>{{ miembro.tipo_miembro }}</td>
                 <td>
                     {% if miembro.fecha_registro %}
                         {{ miembro.fecha_registro.strftime("%d-%m-%Y %H:%M") }}

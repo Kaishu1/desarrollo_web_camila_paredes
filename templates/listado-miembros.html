@@ -44,6 +44,7 @@
                     <th>Nombre</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
+                    <th>Tipo de miembro</th>
                     <th>Comuna</th>
                     <th>Actividad</th>
                     <th>Tipo</th>
@@ -62,6 +63,7 @@
                     <td>{{ miembro.nombre }}</td>
                     <td>{{ miembro.email }}</td>
                     <td>+56 9 {{ miembro.telefono }}</td>
+                    <td>{{ miembro.tipo_miembro }}</td>
                     <td>
                         {% if comuna %}
                             {{ comuna.nombre }}
