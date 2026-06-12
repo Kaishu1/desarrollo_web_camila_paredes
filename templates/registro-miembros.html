@@ -23,6 +23,14 @@
 
     <h1>Formulario de registro miembros</h1>
 
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('registroMiembros') }}">¡Regístrate!</a>
+        <a href="{{ url_for('listadoMiembros') }}">Listado de miembros</a>
+        <a href="{{ url_for('listadoActividades') }}">Listado de actividades</a>
+        <a href="{{ url_for('estadisticas') }}">Estadísticas</a>
+    </nav>
+
 
     <form id="form-registro" method="POST" action="{{ url_for('registroMiembros') }}" enctype="multipart/form-data">
         <fieldset>

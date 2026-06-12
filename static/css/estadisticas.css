@@ -17,23 +17,28 @@ h1 {
 }
 
 nav {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 42px;
+  margin: 30px auto 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 14px;
+  gap: 20px;
 }
 
 nav a {
   text-decoration: none;
-  background-color: #ec7a9c;
+  background-color: #f77fa3;
   color: white;
-  padding: 10px 18px;
+  padding: 10px 20px;
   border-radius: 8px;
   font-weight: 600;
+  text-align: center;
 }
 
 nav a:hover {
-  background-color: #d85e83;
+  background-color: rgb(243, 167, 189);
 }
 
 .contenedor-estadisticas {

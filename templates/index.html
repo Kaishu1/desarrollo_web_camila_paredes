@@ -9,6 +9,14 @@
 <body>
     <h1>♡ ¡Bienvenido! ♡</h1>
 
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('registroMiembros') }}">¡Regístrate!</a>
+        <a href="{{ url_for('listadoMiembros') }}">Listado de miembros</a>
+        <a href="{{ url_for('listadoActividades') }}">Listado de actividades</a>
+        <a href="{{ url_for('estadisticas') }}">Estadísticas</a>
+    </nav>
+
     <img
         width="250"
         height="250"
@@ -23,13 +31,6 @@
             src="{{ url_for('static', filename='images/XiaojieCat.jpg') }}"
             alt="Imagen de Xiaojie ampliada">
     </div>
-
-    <nav>
-        <a href="{{ url_for('registroMiembros') }}">¡Regístrate!</a>
-        <a href="{{ url_for('listadoMiembros') }}">Listado de miembros</a>
-        <a href="{{ url_for('listadoActividades') }}">Listado de actividades</a>
-        <a href="{{ url_for('estadisticas') }}">Estadísticas</a>
-    </nav>
 
     <h2>Últimos miembros registrados</h2>
     
