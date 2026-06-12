@@ -115,7 +115,13 @@ def duracion_desde_bloques(bloques_horarios):
 @app.route("/index")
 def index():
 
-    ultimos_miembros = Miembro.query.order_by(
+    ultimos_miembros = db.session.query(
+        Miembro,
+        Actividad,
+    ).outerjoin(
+        Actividad,
+        Actividad.miembro_id == Miembro.id,
+    ).order_by(
         Miembro.fecha_registro.desc()
     ).limit(5).all()
 

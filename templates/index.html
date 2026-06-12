@@ -14,12 +14,14 @@
         height="250"
         id="CatImage"
         title="Imagen de Xiaojie"
-        src="{{ url_for('static', filename='images/XiaojieCat.jpg') }}">
+        src="{{ url_for('static', filename='images/XiaojieCat.jpg') }}"
+        alt="Imagen de Xiaojie">
 
     <div id="overlay">
         <img
             id="imagenGrande"
-            src="{{ url_for('static', filename='images/XiaojieCat.jpg') }}">
+            src="{{ url_for('static', filename='images/XiaojieCat.jpg') }}"
+            alt="Imagen de Xiaojie ampliada">
     </div>
 
     <nav>
@@ -35,22 +37,24 @@
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Correo</th>
-                <th>Teléfono</th>
+                <th>Deporte</th>
                 <th>Tipo de miembro</th>
-                <th>Detalle tipo</th>
                 <th>Fecha de registro</th>
             </tr>
         </thead>
 
         <tbody>
-            {% for miembro in miembros %}
+            {% for miembro, actividad in miembros %}
             <tr>
                 <td>{{ miembro.nombre }}</td>
-                <td>{{ miembro.email }}</td>
-                <td>+56 9 {{ miembro.telefono }}</td>
+                <td>
+                    {% if actividad %}
+                        {{ actividad.nombre }}
+                    {% else %}
+                        Sin actividad
+                    {% endif %}
+                </td>
                 <td>{{ miembro.tipo_miembro }}</td>
-                <td>{{ miembro.detalle_tipo_miembro }}</td>
                 <td>
                     {% if miembro.fecha_registro %}
                         {{ miembro.fecha_registro.strftime("%d-%m-%Y %H:%M") }}
