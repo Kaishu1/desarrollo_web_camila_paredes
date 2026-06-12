@@ -91,6 +91,26 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `tarea2`.`bloque_horario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tarea2`.`bloque_horario` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `fecha` DATE NOT NULL,
+  `dia` VARCHAR(20) NOT NULL,
+  `hora_inicio` VARCHAR(5) NOT NULL,
+  `hora_fin` VARCHAR(5) NOT NULL,
+  `actividad_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_bloque_horario_actividad1_idx` (`actividad_id` ASC),
+  CONSTRAINT `fk_bloque_horario_actividad1`
+    FOREIGN KEY (`actividad_id`)
+    REFERENCES `tarea2`.`actividad` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `tarea2`.`foto`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tarea2`.`foto` (

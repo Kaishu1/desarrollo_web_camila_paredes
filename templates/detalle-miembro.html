@@ -81,6 +81,19 @@
                             <td>{{ actividad.duracion }}</td>
                         </tr>
                         <tr>
+                            <th>Bloques horarios</th>
+                            <td>
+                                {% set bloques = bloques_por_actividad.get(actividad.id, []) %}
+                                {% if bloques %}
+                                    {% for bloque in bloques %}
+                                        {{ bloque.dia }} {{ bloque.hora_inicio }}-{{ bloque.hora_fin }}{% if not loop.last %}<br>{% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    {{ actividad.dia }} {{ actividad.hora_inicio }} ({{ actividad.duracion }})
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Descripción</th>
                             <td>
                                 {% if actividad.descripcion %}

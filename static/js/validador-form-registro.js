@@ -27,8 +27,24 @@ const validarNombreActividad = (actividad) => {
     return actividad && actividad.trim().length > 3;
 };
 
-const validarDuracion = (duracion) => {
-    return duracion && /^\d{2}:\d{2}$/.test(duracion.trim());
+const validarBloquesHorarios = () => {
+    const bloques = document.querySelectorAll(".bloque-horario");
+
+    if (bloques.length === 0) {
+        return false;
+    }
+
+    for (const bloque of bloques) {
+        const dia = bloque.querySelector('select[name="bloque_dia[]"]').value;
+        const horaInicio = bloque.querySelector('input[name="bloque_hora_inicio[]"]').value;
+        const horaFin = bloque.querySelector('input[name="bloque_hora_fin[]"]').value;
+
+        if (!validarSeleccion(dia) || !horaInicio || !horaFin || horaFin <= horaInicio) {
+            return false;
+        }
+    }
+
+    return true;
 };
 
 function mostrarError(idError, esValido) {
@@ -50,9 +66,6 @@ function validarFormRegistro(event) {
     const inputNombreActividad = document.getElementById("nombreActividad");
     const inputTipoActividad = document.getElementById("tipoActividad");
     const inputDescripcion = document.getElementById("descripcion");
-    const inputDia = document.getElementById("dia");
-    const inputHoraInicio = document.getElementById("horaInicio");
-    const inputDuracion = document.getElementById("duracion");
 
     const nombreValido = validarNombre(inputNombre.value);
     const correoValido = validarCorreo(inputCorreo.value);
@@ -64,9 +77,7 @@ function validarFormRegistro(event) {
     const nombreActividadValido = validarNombreActividad(inputNombreActividad.value);
     const tipoActividadValido = validarSeleccion(inputTipoActividad.value);
     const descripcionValida = validarSeleccion(inputDescripcion.value);
-    const diaValido = validarSeleccion(inputDia.value);
-    const horaInicioValida = validarSeleccion(inputHoraInicio.value);
-    const duracionValida = validarDuracion(inputDuracion.value);
+    const bloquesHorariosValidos = validarBloquesHorarios();
 
     mostrarError("errorNombre", nombreValido);
     mostrarError("errorCorreo", correoValido);
@@ -78,9 +89,7 @@ function validarFormRegistro(event) {
     mostrarError("errorNombreActividad", nombreActividadValido);
     mostrarError("errorTipoActividad", tipoActividadValido);
     mostrarError("errorDescripcion", descripcionValida);
-    mostrarError("errorDia", diaValido);
-    mostrarError("errorHoraInicio", horaInicioValida);
-    mostrarError("errorDuracion", duracionValida);
+    mostrarError("errorBloquesHorarios", bloquesHorariosValidos);
 
     const formularioValido =
         nombreValido &&
@@ -93,13 +102,28 @@ function validarFormRegistro(event) {
         nombreActividadValido &&
         tipoActividadValido &&
         descripcionValida &&
-        diaValido &&
-        horaInicioValida &&
-        duracionValida;
+        bloquesHorariosValidos;
 
     if (!formularioValido) {
         event.preventDefault();
     }
+}
+
+function agregarBloqueHorario() {
+    const contenedor = document.getElementById("contenedor-bloques-horarios");
+    const primerBloque = contenedor.querySelector(".bloque-horario");
+    const nuevoBloque = primerBloque.cloneNode(true);
+    const inputs = nuevoBloque.querySelectorAll("input");
+    const selects = nuevoBloque.querySelectorAll("select");
+
+    inputs.forEach((input) => {
+        input.value = "";
+    });
+    selects.forEach((select) => {
+        select.value = "";
+    });
+
+    contenedor.appendChild(nuevoBloque);
 }
 
 function actualizarDetalleTipoMiembro() {
@@ -133,5 +157,6 @@ function actualizarDetalleTipoMiembro() {
 }
 
 document.getElementById("tipo_miembro").addEventListener("change", actualizarDetalleTipoMiembro);
+document.getElementById("agregar-bloque-horario").addEventListener("click", agregarBloqueHorario);
 actualizarDetalleTipoMiembro();
 formRegistro.addEventListener("submit", validarFormRegistro);

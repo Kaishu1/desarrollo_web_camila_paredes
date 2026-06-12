@@ -45,6 +45,17 @@ class Actividad(db.Model):
     descripcion = db.Column(db.Text, nullable=True)
 
 
+class BloqueHorario(db.Model):
+    __tablename__ = "bloque_horario"
+
+    id = db.Column(db.Integer, primary_key=True)
+    fecha = db.Column(db.Date, nullable=False)
+    dia = db.Column(db.String(20), nullable=False)
+    hora_inicio = db.Column(db.String(5), nullable=False)
+    hora_fin = db.Column(db.String(5), nullable=False)
+    actividad_id = db.Column(db.Integer, nullable=False)
+
+
 class Foto(db.Model):
     __tablename__ = "foto"
 
@@ -67,6 +78,7 @@ def crear_registro_completo(
     hora_inicio,
     duracion,
     descripcion,
+    bloques_horarios=None,
     ruta_archivo=None,
     nombre_archivo=None
 ):
@@ -95,6 +107,17 @@ def crear_registro_completo(
 
     db.session.add(nueva_actividad)
     db.session.flush()
+
+    if bloques_horarios:
+        for bloque in bloques_horarios:
+            nuevo_bloque = BloqueHorario(
+                fecha=bloque["fecha"],
+                dia=bloque["dia"],
+                hora_inicio=bloque["hora_inicio"],
+                hora_fin=bloque["hora_fin"],
+                actividad_id=nueva_actividad.id
+            )
+            db.session.add(nuevo_bloque)
 
     if ruta_archivo and nombre_archivo:
         nueva_foto = Foto(

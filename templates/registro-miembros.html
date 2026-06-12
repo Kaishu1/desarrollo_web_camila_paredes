@@ -115,34 +115,39 @@
                 <span class="error" id="errorDescripcion">Debe ingresar una descripción</span>
             </div>
             <br>
-            <div>
-                <label for="dia">Día</label>
-                <select id="dia" name="dia">
-                    <option value="">-- Seleccione día --</option>
-                    <option value="lunes">Lunes</option>
-                    <option value="martes">Martes</option>
-                    <option value="miercoles">Miércoles</option>
-                    <option value="jueves">Jueves</option>
-                    <option value="viernes">Viernes</option>
-                    <option value="sabado">Sábado</option>
-                    <option value="domingo">Domingo</option>
-                </select>
-                <span class="error" id="errorDia">Debe seleccionar un día</span>
-            </div>
-            <br>
-
-            <div>
-                <label for="horaInicio">Hora de inicio</label>
-                <input type="time" id="horaInicio" name="horaInicio">
-                <span class="error" id="errorHoraInicio">Debe ingresar una hora de inicio</span>
-            </div>
-            <br>
-
-            <div>
-                <label for="duracion">Duración</label>
-                <input type="text" id="duracion" name="duracion" placeholder="01:30">
-                <span class="error" id="errorDuracion">Debe ingresar una duración</span>
-            </div>
+            <section id="bloques-horarios">
+                <h2>Bloques horarios</h2>
+                <div id="contenedor-bloques-horarios">
+                    <div class="bloque-horario">
+                        <div>
+                            <label>Día
+                                <select name="bloque_dia[]">
+                                    <option value="">-- Seleccione día --</option>
+                                    <option value="lunes">Lunes</option>
+                                    <option value="martes">Martes</option>
+                                    <option value="miércoles">Miércoles</option>
+                                    <option value="jueves">Jueves</option>
+                                    <option value="viernes">Viernes</option>
+                                    <option value="sábado">Sábado</option>
+                                    <option value="domingo">Domingo</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div>
+                            <label>Hora de inicio
+                                <input type="time" name="bloque_hora_inicio[]">
+                            </label>
+                        </div>
+                        <div>
+                            <label>Hora de fin
+                                <input type="time" name="bloque_hora_fin[]">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="agregar-bloque-horario">Agregar bloque horario</button>
+                <span class="error" id="errorBloquesHorarios">Debe ingresar bloques horarios válidos</span>
+            </section>
             <br>
             
 

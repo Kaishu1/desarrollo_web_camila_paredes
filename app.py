@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template, request, redirect, url_for
-from database.db import Actividad, Comuna, Foto, Region, db, Miembro, crear_registro_completo
+from database.db import Actividad, BloqueHorario, Comuna, Foto, Region, db, Miembro, crear_registro_completo
 from werkzeug.utils import secure_filename
+from datetime import datetime
 import os
 
 app = Flask(__name__)
@@ -36,6 +37,78 @@ TIPOS_MIEMBRO = {
 
 def obtener_regiones():
     return Region.query.order_by(Region.id).all()
+
+
+def obtener_bloques_por_actividad(actividades_ids):
+    bloques_por_actividad = {}
+
+    if actividades_ids:
+        bloques = BloqueHorario.query.filter(
+            BloqueHorario.actividad_id.in_(actividades_ids)
+        ).order_by(
+            BloqueHorario.dia,
+            BloqueHorario.hora_inicio,
+        ).all()
+
+        for bloque in bloques:
+            bloques_por_actividad.setdefault(bloque.actividad_id, []).append(bloque)
+
+    return bloques_por_actividad
+
+
+def obtener_bloques_desde_formulario():
+    dias = request.form.getlist("bloque_dia[]")
+    horas_inicio = request.form.getlist("bloque_hora_inicio[]")
+    horas_fin = request.form.getlist("bloque_hora_fin[]")
+    bloques_horarios = []
+    dias_validos = {"lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"}
+
+    if not dias or not horas_inicio or not horas_fin:
+        raise ValueError("Debe ingresar al menos un bloque horario")
+    if not (len(dias) == len(horas_inicio) == len(horas_fin)):
+        raise ValueError("Los bloques horarios están incompletos")
+
+    for dia, hora_inicio, hora_fin in zip(dias, horas_inicio, horas_fin):
+        dia = dia.strip()
+        hora_inicio = hora_inicio.strip()
+        hora_fin = hora_fin.strip()
+
+        if not dia or not hora_inicio or not hora_fin:
+            raise ValueError("Todos los campos del bloque horario son obligatorios")
+
+        if dia not in dias_validos:
+            raise ValueError("El día del bloque horario no es válido")
+
+        inicio = datetime.strptime(hora_inicio, "%H:%M").time()
+        fin = datetime.strptime(hora_fin, "%H:%M").time()
+
+        if fin <= inicio:
+            raise ValueError("La hora de fin debe ser posterior a la hora de inicio")
+
+        bloques_horarios.append({
+            "fecha": datetime(2000, 1, 3).date(),
+            "dia": dia,
+            "hora_inicio": hora_inicio,
+            "hora_fin": hora_fin,
+        })
+
+    return bloques_horarios
+
+
+def duracion_desde_bloques(bloques_horarios):
+    total_minutos = 0
+
+    for bloque in bloques_horarios:
+        inicio = datetime.strptime(bloque["hora_inicio"], "%H:%M")
+        fin = datetime.strptime(bloque["hora_fin"], "%H:%M")
+        diferencia = fin - inicio
+        total_minutos += int(diferencia.total_seconds() // 60)
+
+    if total_minutos % 60 == 0:
+        return str(total_minutos // 60)
+
+    horas = total_minutos / 60
+    return str(round(horas, 2)).rstrip("0").rstrip(".")
 
 
 @app.route("/")
@@ -169,10 +242,17 @@ def listadoMiembros():
         pagina = total_paginas
 
     registros = consulta.limit(por_pagina).offset((pagina - 1) * por_pagina).all()
+    actividades_ids = [
+        actividad.id
+        for _, actividad, _, _ in registros
+        if actividad
+    ]
+    bloques_por_actividad = obtener_bloques_por_actividad(actividades_ids)
 
     return render_template(
         "listado-miembros.html",
         registros=registros,
+        bloques_por_actividad=bloques_por_actividad,
         tipo_seleccionado=tipo_actividad,
         pagina=pagina,
         total_paginas=total_paginas,
@@ -189,6 +269,7 @@ def detalleMiembro(miembro_id):
 
     fotos_por_actividad = {}
     actividades_ids = [actividad.id for actividad in actividades]
+    bloques_por_actividad = obtener_bloques_por_actividad(actividades_ids)
 
     if actividades_ids:
         fotos = Foto.query.filter(Foto.actividad_id.in_(actividades_ids)).all()
@@ -200,6 +281,7 @@ def detalleMiembro(miembro_id):
         miembro=miembro,
         comuna=comuna,
         actividades=actividades,
+        bloques_por_actividad=bloques_por_actividad,
         fotos_por_actividad=fotos_por_actividad,
     )
 
@@ -236,10 +318,17 @@ def registroMiembros():
 
         nombre_actividad = request.form.get("nombreActividad")
         tipo_actividad = request.form.get("tipoActividad")
-        dia = request.form.get("dia")
-        hora_inicio = request.form.get("horaInicio")
-        duracion = request.form.get("duracion")
         descripcion = request.form.get("descripcion")
+
+        try:
+            bloques_horarios = obtener_bloques_desde_formulario()
+        except ValueError as error:
+            return str(error), 400
+
+        primer_bloque = bloques_horarios[0]
+        dia = primer_bloque["dia"]
+        hora_inicio = primer_bloque["hora_inicio"]
+        duracion = duracion_desde_bloques(bloques_horarios)
 
         # AQUÍ va lo de la foto
         foto = request.files.get("foto")
@@ -267,6 +356,7 @@ def registroMiembros():
             hora_inicio=hora_inicio,
             duracion=duracion,
             descripcion=descripcion,
+            bloques_horarios=bloques_horarios,
             ruta_archivo=ruta_archivo,
             nombre_archivo=nombre_archivo
         )
