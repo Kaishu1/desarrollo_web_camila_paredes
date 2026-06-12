@@ -226,10 +226,13 @@ def registroMiembros():
         email = request.form.get("correo")
         telefono = request.form.get("telefono")
         tipo_miembro = request.form.get("tipo_miembro")
+        detalle_tipo_miembro = request.form.get("detalle_tipo_miembro", "").strip()
         comuna_id = request.form.get("comuna")
 
         if tipo_miembro not in TIPOS_MIEMBRO:
             return "Tipo de miembro inválido", 400
+        if not detalle_tipo_miembro:
+            return "Detalle de tipo de miembro inválido", 400
 
         nombre_actividad = request.form.get("nombreActividad")
         tipo_actividad = request.form.get("tipoActividad")
@@ -256,6 +259,7 @@ def registroMiembros():
             email=email,
             telefono=telefono,
             tipo_miembro=tipo_miembro,
+            detalle_tipo_miembro=detalle_tipo_miembro,
             comuna_id=comuna_id,
             nombre_actividad=nombre_actividad,
             tipo_actividad=tipo_actividad,

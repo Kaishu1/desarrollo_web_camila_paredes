@@ -16,6 +16,13 @@ const validarSeleccion = (opcion) => {
     return opcion && opcion.trim() !== "";
 };
 
+const etiquetasDetalleTipoMiembro = {
+    "Estudiante de Pregrado": "Año de ingreso",
+    "Estudiante de Postgrado": "Programa",
+    "Funcionario(a)": "Cargo",
+    "Académico(a)": "Área académica",
+};
+
 const validarNombreActividad = (actividad) => {
     return actividad && actividad.trim().length > 3;
 };
@@ -37,6 +44,7 @@ function validarFormRegistro(event) {
     const inputCorreo = document.getElementById("correo");
     const inputTelefono = document.getElementById("telefono");
     const inputTipoMiembro = document.getElementById("tipo_miembro");
+    const inputDetalleTipoMiembro = document.getElementById("detalle_tipo_miembro");
     const inputRegion = document.getElementById("region");
     const inputComuna = document.getElementById("comuna");
     const inputNombreActividad = document.getElementById("nombreActividad");
@@ -50,6 +58,7 @@ function validarFormRegistro(event) {
     const correoValido = validarCorreo(inputCorreo.value);
     const telefonoValido = validarTelefono(inputTelefono.value);
     const tipoMiembroValido = validarSeleccion(inputTipoMiembro.value);
+    const detalleTipoMiembroValido = validarSeleccion(inputDetalleTipoMiembro.value);
     const regionValida = validarSeleccion(inputRegion.value);
     const comunaValida = validarSeleccion(inputComuna.value);
     const nombreActividadValido = validarNombreActividad(inputNombreActividad.value);
@@ -63,6 +72,7 @@ function validarFormRegistro(event) {
     mostrarError("errorCorreo", correoValido);
     mostrarError("errorTelefono", telefonoValido);
     mostrarError("errorTipoMiembro", tipoMiembroValido);
+    mostrarError("errorDetalleTipoMiembro", detalleTipoMiembroValido);
     mostrarError("errorRegion", regionValida);
     mostrarError("errorComuna", comunaValida);
     mostrarError("errorNombreActividad", nombreActividadValido);
@@ -77,6 +87,7 @@ function validarFormRegistro(event) {
         correoValido &&
         telefonoValido &&
         tipoMiembroValido &&
+        detalleTipoMiembroValido &&
         regionValida &&
         comunaValida &&
         nombreActividadValido &&
@@ -91,4 +102,36 @@ function validarFormRegistro(event) {
     }
 }
 
+function actualizarDetalleTipoMiembro() {
+    const inputTipoMiembro = document.getElementById("tipo_miembro");
+    const contenedorDetalle = document.getElementById("contenedor_detalle_tipo_miembro");
+    const labelDetalle = document.getElementById("label_detalle_tipo_miembro");
+    const inputDetalle = document.getElementById("detalle_tipo_miembro");
+    const etiqueta = etiquetasDetalleTipoMiembro[inputTipoMiembro.value];
+
+    if (!etiqueta) {
+        contenedorDetalle.hidden = true;
+        inputDetalle.value = "";
+        inputDetalle.type = "text";
+        inputDetalle.removeAttribute("min");
+        inputDetalle.removeAttribute("max");
+        return;
+    }
+
+    labelDetalle.textContent = etiqueta;
+    inputDetalle.type = inputTipoMiembro.value === "Estudiante de Pregrado" ? "number" : "text";
+
+    if (inputTipoMiembro.value === "Estudiante de Pregrado") {
+        inputDetalle.min = "1900";
+        inputDetalle.max = "2100";
+    } else {
+        inputDetalle.removeAttribute("min");
+        inputDetalle.removeAttribute("max");
+    }
+
+    contenedorDetalle.hidden = false;
+}
+
+document.getElementById("tipo_miembro").addEventListener("change", actualizarDetalleTipoMiembro);
+actualizarDetalleTipoMiembro();
 formRegistro.addEventListener("submit", validarFormRegistro);
