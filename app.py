@@ -204,11 +204,6 @@ def actividadesPorComuna():
 
 @app.route("/listado-actividades")
 def listadoActividades():
-    return render_template("listado-actividades.html")
-
-
-@app.route("/listado-miembros")
-def listadoMiembros():
     tipo_actividad = request.args.get("tipoActividad", "todos")
     pagina = request.args.get("pagina", 1, type=int)
     por_pagina = 5
@@ -256,10 +251,48 @@ def listadoMiembros():
     bloques_por_actividad = obtener_bloques_por_actividad(actividades_ids)
 
     return render_template(
-        "listado-miembros.html",
+        "listado-actividades.html",
         registros=registros,
         bloques_por_actividad=bloques_por_actividad,
         tipo_seleccionado=tipo_actividad,
+        pagina=pagina,
+        total_paginas=total_paginas,
+    )
+
+
+@app.route("/listado-miembros")
+def listadoMiembros():
+    pagina = request.args.get("pagina", 1, type=int)
+    por_pagina = 5
+
+    if pagina < 1:
+        pagina = 1
+
+    consulta = db.session.query(
+        Miembro,
+        Comuna,
+        Actividad,
+    ).outerjoin(
+        Comuna,
+        Comuna.id == Miembro.comuna_id,
+    ).outerjoin(
+        Actividad,
+        Actividad.miembro_id == Miembro.id,
+    ).order_by(
+        Miembro.fecha_registro.desc()
+    )
+
+    total_registros = consulta.count()
+    total_paginas = (total_registros + por_pagina - 1) // por_pagina
+
+    if total_paginas > 0 and pagina > total_paginas:
+        pagina = total_paginas
+
+    miembros = consulta.limit(por_pagina).offset((pagina - 1) * por_pagina).all()
+
+    return render_template(
+        "listado-miembros.html",
+        miembros=miembros,
         pagina=pagina,
         total_paginas=total_paginas,
     )

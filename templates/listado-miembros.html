@@ -12,68 +12,64 @@
     <nav>
         <a href="{{ url_for('index') }}">Inicio</a>
         <a href="{{ url_for('registroMiembros') }}">¡Regístrate!</a>
+        <a href="{{ url_for('listadoActividades') }}">Listado de actividades</a>
         <a href="{{ url_for('estadisticas') }}">Estadísticas</a>
     </nav>
 
-    <div class="encabezado-listado">
-        <h2>Miembros registrados</h2>
+    <h2>Miembros registrados</h2>
 
-        <form class="filtros-miembros" method="GET" action="{{ url_for('listadoMiembros') }}">
-            <div class="filtro">
-                <label for="tipoActividad">Tipo de actividad</label>
-                <select id="tipoActividad" name="tipoActividad">
-                    <option value="todos" {% if tipo_seleccionado == "todos" %}selected{% endif %}>Todos</option>
-                    <option value="arte" {% if tipo_seleccionado == "arte" %}selected{% endif %}>Arte</option>
-                    <option value="deporte" {% if tipo_seleccionado == "deporte" %}selected{% endif %}>Deporte</option>
-                    <option value="tecnología" {% if tipo_seleccionado == "tecnología" %}selected{% endif %}>Tecnología</option>
-                    <option value="social" {% if tipo_seleccionado == "social" %}selected{% endif %}>Social</option>
-                    <option value="recreación" {% if tipo_seleccionado == "recreación" %}selected{% endif %}>Recreación</option>
-                    <option value="otra" {% if tipo_seleccionado == "otra" %}selected{% endif %}>Otra</option>
-                </select>
-            </div>
+    {% if miembros %}
+    <div class="tabla-scroll">
+        <table class="tabla-miembros">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Tipo de miembro</th>
+                    <th>Tipo de actividad</th>
+                    <th>Comuna</th>
+                    <th>Fecha de registro</th>
+                </tr>
+            </thead>
 
-            <button type="submit">Filtrar</button>
-        </form>
-    </div>
-
-    {% if registros %}
-    <section class="foro-actividades">
-        {% for miembro, actividad, foto, comuna in registros %}
-        <article class="actividad-foro">
-            <div class="actividad-imagen">
-                {% if foto %}
-                    <img
-                        src="{{ url_for('static', filename=foto.ruta_archivo|ruta_static) }}"
-                        alt="{{ foto.nombre_archivo }}">
-                {% else %}
-                    <div class="actividad-sin-imagen">Sin imagen</div>
-                {% endif %}
-            </div>
-
-            <div class="actividad-contenido">
-                <p class="actividad-autor">{{ miembro.nombre }}</p>
-
-                {% if actividad %}
-                    <h3>{{ actividad.nombre }}</h3>
-                    <p class="actividad-descripcion">
-                        {% if actividad.descripcion %}
-                            {{ actividad.descripcion }}
+            <tbody>
+                {% for miembro, comuna, actividad in miembros %}
+                <tr>
+                    <td>{{ miembro.nombre }}</td>
+                    <td>{{ miembro.email }}</td>
+                    <td>+56 9 {{ miembro.telefono }}</td>
+                    <td>{{ miembro.tipo_miembro }}</td>
+                    <td>
+                        {% if actividad %}
+                            {{ actividad.tipo }}
                         {% else %}
-                            Sin descripción
+                            Sin actividad
                         {% endif %}
-                    </p>
-                {% else %}
-                    <h3>Sin actividad</h3>
-                    <p class="actividad-descripcion">Este miembro todavía no tiene una actividad registrada.</p>
-                {% endif %}
-            </div>
-        </article>
-        {% endfor %}
-    </section>
+                    </td>
+                    <td>
+                        {% if comuna %}
+                            {{ comuna.nombre }}
+                        {% else %}
+                            {{ miembro.comuna_id }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if miembro.fecha_registro %}
+                            {{ miembro.fecha_registro.strftime("%d-%m-%Y %H:%M") }}
+                        {% else %}
+                            Sin fecha
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <div class="paginacion">
         {% if pagina > 1 %}
-            <a href="{{ url_for('listadoMiembros', pagina=pagina - 1, tipoActividad=tipo_seleccionado) }}">Anterior</a>
+            <a href="{{ url_for('listadoMiembros', pagina=pagina - 1) }}">Anterior</a>
         {% else %}
             <span>Anterior</span>
         {% endif %}
@@ -81,7 +77,7 @@
         <strong>Página {{ pagina }} de {{ total_paginas }}</strong>
 
         {% if pagina < total_paginas %}
-            <a href="{{ url_for('listadoMiembros', pagina=pagina + 1, tipoActividad=tipo_seleccionado) }}">Siguiente</a>
+            <a href="{{ url_for('listadoMiembros', pagina=pagina + 1) }}">Siguiente</a>
         {% else %}
             <span>Siguiente</span>
         {% endif %}

@@ -1,59 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/listado-actividades.css')}}">
+    <meta charset="UTF-8">
+    <title>Listado de actividades</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
 
 <body>
-    <header>
-      <h1> ♡ Listado de Actividades ♡</h1>
-    </header>
-    <h2>Filtros:</h2>
-    <div class="filtros">
-        <div class="filtro">
-            <label>Tipo Miembro</label>
-            <select id="filtro-miembro">
-                <option value="todos">Todos</option>
-                <option value="Pregrado"> Pregrado </option>
-                <option value="Postgrado"> Postgrado</option>
-                <option value="Funcionario"> Funcionario </option>
-                <option value="Académico"> Académico </option>
-            </select>
-        </div>
+    <h1>Listado de actividades</h1>
 
-        <div class="filtro">
-            <label>Tipo Actividad</label>
-            <select id="filtro-actividad">
-            <option value="todos">Todos</option>
-            <option value="Deporte">Deporte</option>
-            <option value="Artístico">Artístico</option>
-            <option value="Educativo">Educativo</option>
-            <option value="Social / Voluntariado"> Social / Voluntariado</option>
-            <option value="Recreativo">Recreativo</option>
-        </select>
-            
-        </div>
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('registroMiembros') }}">¡Regístrate!</a>
+        <a href="{{ url_for('listadoMiembros') }}">Listado de miembros</a>
+        <a href="{{ url_for('estadisticas') }}">Estadísticas</a>
+    </nav>
 
+    <div class="encabezado-listado">
+        <h2>Actividades registradas</h2>
+
+        <form class="filtros-miembros" method="GET" action="{{ url_for('listadoActividades') }}">
+            <div class="filtro">
+                <label for="tipoActividad">Tipo de actividad</label>
+                <select id="tipoActividad" name="tipoActividad">
+                    <option value="todos" {% if tipo_seleccionado == "todos" %}selected{% endif %}>Todos</option>
+                    <option value="arte" {% if tipo_seleccionado == "arte" %}selected{% endif %}>Arte</option>
+                    <option value="deporte" {% if tipo_seleccionado == "deporte" %}selected{% endif %}>Deporte</option>
+                    <option value="tecnología" {% if tipo_seleccionado == "tecnología" %}selected{% endif %}>Tecnología</option>
+                    <option value="social" {% if tipo_seleccionado == "social" %}selected{% endif %}>Social</option>
+                    <option value="recreación" {% if tipo_seleccionado == "recreación" %}selected{% endif %}>Recreación</option>
+                    <option value="otra" {% if tipo_seleccionado == "otra" %}selected{% endif %}>Otra</option>
+                </select>
+            </div>
+
+            <button type="submit">Filtrar</button>
+        </form>
     </div>
 
+    {% if registros %}
+    <section class="foro-actividades">
+        {% for miembro, actividad, foto, comuna in registros %}
+        <article class="actividad-foro">
+            <div class="actividad-imagen">
+                {% if foto %}
+                    <img
+                        src="{{ url_for('static', filename=foto.ruta_archivo|ruta_static) }}"
+                        alt="{{ foto.nombre_archivo }}">
+                {% else %}
+                    <div class="actividad-sin-imagen">Sin imagen</div>
+                {% endif %}
+            </div>
 
-    
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Teléfono</th>
-                <th>Tipo Miembro</th>
-                <th>Actividad</th>
-                <th>Tipo Actividad</th>
-                
-            </tr>
-        </thead>
-        <tbody id="tabla-body">
-        </tbody>
-    </table>
-    <script src="listado-actividades.js"></script>
+            <div class="actividad-contenido">
+                <p class="actividad-autor">{{ miembro.nombre }}</p>
 
+                {% if actividad %}
+                    <h3>{{ actividad.nombre }}</h3>
+                    <p class="actividad-descripcion">
+                        {% if actividad.descripcion %}
+                            {{ actividad.descripcion }}
+                        {% else %}
+                            Sin descripción
+                        {% endif %}
+                    </p>
+                {% else %}
+                    <h3>Sin actividad</h3>
+                    <p class="actividad-descripcion">Este miembro todavía no tiene una actividad registrada.</p>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    </section>
+
+    <div class="paginacion">
+        {% if pagina > 1 %}
+            <a href="{{ url_for('listadoActividades', pagina=pagina - 1, tipoActividad=tipo_seleccionado) }}">Anterior</a>
+        {% else %}
+            <span>Anterior</span>
+        {% endif %}
+
+        <strong>Página {{ pagina }} de {{ total_paginas }}</strong>
+
+        {% if pagina < total_paginas %}
+            <a href="{{ url_for('listadoActividades', pagina=pagina + 1, tipoActividad=tipo_seleccionado) }}">Siguiente</a>
+        {% else %}
+            <span>Siguiente</span>
+        {% endif %}
+    </div>
+    {% else %}
+    <p>Todavía no hay actividades registradas.</p>
+    {% endif %}
 </body>
 </html>
