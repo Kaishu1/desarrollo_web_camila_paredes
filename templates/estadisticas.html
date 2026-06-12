@@ -1,76 +1,37 @@
 <!DOCTYPE html>
-<html>
-
-    <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/estadisticas.css') }}">
-    </head>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estadisticas.css') }}">
+</head>
 
 <body>
-  <header>
-    <h1>♡ Estadísticas ♡</h1>
-  </header>
+    <header>
+        <h1>Estadísticas</h1>
 
-<main class="contenedor-estadisticas">
-    
-  <section class="tarjeta-grafico">
-    <h2>Miembros por tipo:</h2>
+        <nav>
+            <a href="{{ url_for('index') }}">Inicio</a>
+            <a href="{{ url_for('listadoMiembros') }}">Listado de miembros</a>
+            <a href="{{ url_for('registroMiembros') }}">Regístrate</a>
+        </nav>
+    </header>
 
-    <div class="grafico">
-      <div class="barra">
-        <span class="etiqueta">Pregrado</span>
-        <div class="valor" style="width: 40%;">4</div>
-      </div>
+    <main class="contenedor-estadisticas">
+        <section class="tarjeta-grafico" aria-labelledby="titulo-miembros-dia">
+            <h2 id="titulo-miembros-dia">Miembros registrados por día</h2>
+            <div id="grafico-miembros-dia"></div>
+            <p id="mensaje-miembros-dia"></p>
+        </section>
+        <section class="tarjeta-grafico" aria-labelledby="titulo-actividades-tipo">
+            <h2 id="titulo-actividades-tipo">Actividades por tipo</h2>
+            <div id="grafico-actividades-tipo"></div>
+            <p id="mensaje-actividades-tipo"></p>
+        </section>
+    </main>
 
-      <div class="barra">
-        <span class="etiqueta">Postgrado</span>
-        <div class="valor" style="width: 10%;">1</div>
-      </div>
-
-      <div class="barra">
-        <span class="etiqueta">Funcionario</span>
-        <div class="valor" style="width: 30%;">3</div>
-      </div>
-    </div>
-
-     <div class="barra">
-        <span class="etiqueta">Académicos</span>
-        <div class="valor" style="width: 20%;">2</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Actividades -->
-  <section class="tarjeta-grafico">
-    <h2>Actividades por tipo:</h2>
-
-    <div class="grafico">
-      <div class="barra">
-        <span class="etiqueta">Deporte</span>
-        <div class="valor" style="width: 30%;">3</div>
-      </div>
-
-      <div class="barra">
-        <span class="etiqueta">Artístico</span>
-        <div class="valor" style="width: 30%;">3</div>
-      </div>
-
-      <div class="barra">
-        <span class="etiqueta">Educativo</span>
-        <div class="valor" style="width: 20%;">2</div>
-      </div>
-
-    <div class="barra">
-        <span class="etiqueta">Social / Voluntariado</span>
-        <div class="valor" style="width: 10%;">1</div>
-      </div>
-
-      <div class="barra">
-        <span class="etiqueta">Recreativo</span>
-        <div class="valor" style="width: 10%;">1</div>
-      </div>
-    </div>
-  </section>
-
-</main>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="{{ url_for('static', filename='js/estadisticas.js') }}"></script>
 </body>
 </html>

@@ -90,3 +90,65 @@ fetch("/api/estadisticas/miembros-por-dia")
     document.getElementById("mensaje-miembros-dia").textContent =
       "No se pudo cargar el gráfico.";
   });
+
+Highcharts.chart("grafico-actividades-tipo", {
+  chart: {
+    type: "pie",
+  },
+  title: {
+    text: "Actividades por tipo",
+  },
+  tooltip: {
+    pointFormat: "<b>{point.y}</b> actividades ({point.percentage:.1f}%)",
+  },
+  series: [
+    {
+      name: "Actividades",
+      data: [],
+      colorByPoint: true,
+    },
+  ],
+});
+
+fetch("/api/estadisticas/actividades-por-tipo")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("No se pudieron cargar las estadísticas");
+    }
+
+    return response.json();
+  })
+  .then((data) => {
+    if (data.length === 0) {
+      document.getElementById("mensaje-actividades-tipo").textContent =
+        "Todavía no hay actividades registradas.";
+      return;
+    }
+
+    let parsedData = data.map((item) => {
+      return {
+        name: item.tipo,
+        y: item.cantidad,
+      };
+    });
+
+    const chart = Highcharts.charts.find(
+      (chart) => chart && chart.renderTo.id === "grafico-actividades-tipo"
+    );
+
+    chart.update({
+      series: [
+        {
+          data: parsedData,
+        },
+      ],
+    });
+
+    document.getElementById("mensaje-actividades-tipo").textContent = "";
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+
+    document.getElementById("mensaje-actividades-tipo").textContent =
+      "No se pudo cargar el gráfico.";
+  });
