@@ -1,0 +1,92 @@
+Highcharts.chart("grafico-miembros-dia", {
+  chart: {
+    type: "line",
+  },
+  title: {
+    text: "Cantidad de miembros registrados por día",
+  },
+  xAxis: {
+    type: "datetime",
+    dateTimeLabelFormats: {
+      day: "%e-%m-%Y",
+      month: "%e-%m-%Y",
+    },
+    title: {
+      text: "Día",
+    },
+  },
+  yAxis: {
+    title: {
+      text: "Cantidad de miembros",
+    },
+    allowDecimals: false,
+  },
+  legend: {
+    align: "left",
+    verticalAlign: "top",
+    borderWidth: 0,
+  },
+  tooltip: {
+    shared: true,
+    crosshairs: true,
+  },
+  series: [
+    {
+      name: "Miembros",
+      data: [],
+      lineWidth: 1,
+      marker: {
+        enabled: true,
+        radius: 4,
+      },
+      color: "#ec7a9c",
+    },
+  ],
+});
+
+fetch("/api/estadisticas/miembros-por-dia")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("No se pudieron cargar las estadísticas");
+    }
+
+    return response.json();
+  })
+  .then((data) => {
+    if (data.length === 0) {
+      document.getElementById("mensaje-miembros-dia").textContent =
+        "Todavía no hay miembros registrados.";
+      return;
+    }
+
+    let parsedData = data.map((item) => {
+      const [year, month, day] = item.dia
+        .split("-")
+        .map((part) => parseInt(part, 10));
+
+      return [
+        Date.UTC(year, month - 1, day),
+        item.cantidad,
+      ];
+    });
+
+    const chart = Highcharts.charts.find(
+      (chart) => chart && chart.renderTo.id === "grafico-miembros-dia"
+    );
+
+    chart.update({
+      series: [
+        {
+          data: parsedData,
+        },
+      ],
+    });
+
+    document.getElementById("mensaje-miembros-dia").textContent = "";
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+
+    document.getElementById("mensaje-miembros-dia").textContent =
+      "No se pudo cargar el gráfico.";
+  });
