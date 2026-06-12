@@ -152,3 +152,74 @@ fetch("/api/estadisticas/actividades-por-tipo")
     document.getElementById("mensaje-actividades-tipo").textContent =
       "No se pudo cargar el gráfico.";
   });
+
+Highcharts.chart("grafico-actividades-comuna", {
+  chart: {
+    type: "bar",
+  },
+  title: {
+    text: "Total de Actividades Registradas por Comuna",
+  },
+  xAxis: {
+    categories: [],
+    title: {
+      text: "Comunas",
+    },
+  },
+  yAxis: {
+    min: 0,
+    allowDecimals: false,
+    title: {
+      text: "Total de Actividades",
+    },
+  },
+  series: [
+    {
+      name: "Actividades",
+      data: [],
+      color: "#ec7a9c",
+    },
+  ],
+});
+
+fetch("/api/estadisticas/actividades-por-comuna")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("No se pudieron cargar las estadísticas");
+    }
+
+    return response.json();
+  })
+  .then((data) => {
+    if (data.length === 0) {
+      document.getElementById("mensaje-actividades-comuna").textContent =
+        "Todavía no hay actividades registradas por comuna.";
+      return;
+    }
+
+    let comunas = data.map((item) => item.comuna);
+    let cantidades = data.map((item) => item.cantidad);
+
+    const chart = Highcharts.charts.find(
+      (chart) => chart && chart.renderTo.id === "grafico-actividades-comuna"
+    );
+
+    chart.update({
+      xAxis: {
+        categories: comunas,
+      },
+      series: [
+        {
+          data: cantidades,
+        },
+      ],
+    });
+
+    document.getElementById("mensaje-actividades-comuna").textContent = "";
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+
+    document.getElementById("mensaje-actividades-comuna").textContent =
+      "No se pudo cargar el gráfico.";
+  });
