@@ -180,12 +180,14 @@ def actividadesPorComuna():
     registros = db.session.query(
         Comuna.nombre,
         db.func.count(Actividad.id).label("cantidad"),
+    ).select_from(
+        Actividad,
     ).join(
         Miembro,
-        Miembro.comuna_id == Comuna.id,
-    ).join(
-        Actividad,
         Actividad.miembro_id == Miembro.id,
+    ).join(
+        Comuna,
+        Miembro.comuna_id == Comuna.id,
     ).group_by(
         Comuna.id,
         Comuna.nombre,
@@ -329,6 +331,8 @@ def listadoMiembros():
         Miembro,
         Comuna,
         Actividad,
+    ).select_from(
+        Miembro,
     ).outerjoin(
         Comuna,
         Comuna.id == Miembro.comuna_id,
@@ -406,11 +410,21 @@ def registroMiembros():
         tipo_miembro = request.form.get("tipo_miembro")
         detalle_tipo_miembro = request.form.get("detalle_tipo_miembro", "").strip()
         comuna_id = request.form.get("comuna")
+        region_id = request.form.get("region")
 
         if tipo_miembro not in TIPOS_MIEMBRO:
             return "Tipo de miembro inválido", 400
         if not detalle_tipo_miembro:
             return "Detalle de tipo de miembro inválido", 400
+
+        if not comuna_id or not comuna_id.isdigit():
+            return "Comuna invalida", 400
+        if not region_id or not region_id.isdigit():
+            return "Region invalida", 400
+
+        comuna = db.session.get(Comuna, int(comuna_id))
+        if not comuna or comuna.region_id != int(region_id):
+            return "La comuna seleccionada no corresponde a la region", 400
 
         nombre_actividad = request.form.get("nombreActividad")
         tipo_actividad = request.form.get("tipoActividad")
