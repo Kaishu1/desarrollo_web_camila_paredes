@@ -37,121 +37,39 @@
     </div>
 
     {% if registros %}
-    <div class="tabla-scroll">
-        <table class="tabla-registros">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Tipo de miembro</th>
-                    <th>Detalle tipo</th>
-                    <th>Comuna</th>
-                    <th>Actividad</th>
-                    <th>Tipo</th>
-                    <th>Día</th>
-                    <th>Hora de inicio</th>
-                    <th>Duración</th>
-                    <th>Bloques horarios</th>
-                    <th>Descripción</th>
-                    <th>Imagen</th>
-                    <th>Fecha de registro</th>
-                </tr>
-            </thead>
+    <section class="foro-actividades">
+        {% for miembro, actividad, foto, comuna in registros %}
+        <article class="actividad-foro">
+            <div class="actividad-imagen">
+                {% if foto %}
+                    <img
+                        src="{{ url_for('static', filename=foto.ruta_archivo|ruta_static) }}"
+                        alt="{{ foto.nombre_archivo }}">
+                {% else %}
+                    <div class="actividad-sin-imagen">Sin imagen</div>
+                {% endif %}
+            </div>
 
-            <tbody>
-                {% for miembro, actividad, foto, comuna in registros %}
-                <tr class="fila-clicable" onclick="window.location='{{ url_for('detalleMiembro', miembro_id=miembro.id) }}'">
-                    <td>{{ miembro.nombre }}</td>
-                    <td>{{ miembro.email }}</td>
-                    <td>+56 9 {{ miembro.telefono }}</td>
-                    <td>{{ miembro.tipo_miembro }}</td>
-                    <td>{{ miembro.detalle_tipo_miembro }}</td>
-                    <td>
-                        {% if comuna %}
-                            {{ comuna.nombre }}
-                        {% else %}
-                            {{ miembro.comuna_id }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if actividad %}
-                            {{ actividad.nombre }}
-                        {% else %}
-                            Sin actividad
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if actividad %}
-                            {{ actividad.tipo }}
-                        {% else %}
-                            Sin tipo
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if actividad %}
-                            {{ actividad.dia }}
-                        {% else %}
-                            Sin día
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if actividad %}
-                            {{ actividad.hora_inicio }}
-                        {% else %}
-                            Sin hora
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if actividad %}
-                            {{ actividad.duracion }}
-                        {% else %}
-                            Sin duración
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if actividad %}
-                            {% set bloques = bloques_por_actividad.get(actividad.id, []) %}
-                            {% if bloques %}
-                                {% for bloque in bloques %}
-                                    {{ bloque.dia }} {{ bloque.hora_inicio }}-{{ bloque.hora_fin }}{% if not loop.last %}<br>{% endif %}
-                                {% endfor %}
-                            {% else %}
-                                {{ actividad.dia }} {{ actividad.hora_inicio }} ({{ actividad.duracion }})
-                            {% endif %}
-                        {% else %}
-                            Sin bloques
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if actividad and actividad.descripcion %}
+            <div class="actividad-contenido">
+                <p class="actividad-autor">{{ miembro.nombre }}</p>
+
+                {% if actividad %}
+                    <h3>{{ actividad.nombre }}</h3>
+                    <p class="actividad-descripcion">
+                        {% if actividad.descripcion %}
                             {{ actividad.descripcion }}
                         {% else %}
                             Sin descripción
                         {% endif %}
-                    </td>
-                    <td>
-                        {% if foto %}
-                            <img
-                                class="foto-registro"
-                                src="{{ url_for('static', filename=foto.ruta_archivo|ruta_static) }}"
-                                alt="{{ foto.nombre_archivo }}">
-                        {% else %}
-                            Sin imagen
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if miembro.fecha_registro %}
-                            {{ miembro.fecha_registro.strftime("%d-%m-%Y %H:%M") }}
-                        {% else %}
-                            Sin fecha
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                    </p>
+                {% else %}
+                    <h3>Sin actividad</h3>
+                    <p class="actividad-descripcion">Este miembro todavía no tiene una actividad registrada.</p>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    </section>
 
     <div class="paginacion">
         {% if pagina > 1 %}
